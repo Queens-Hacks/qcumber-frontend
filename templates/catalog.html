@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>Subjects</h2>
+<table class="table">
+  <tr>
+    <td>ANAT</td>
+    <td><a href="{{ url_for('subject', subject='ANAT') }}">Anatomy and Cell Biology</a></td>
+  </tr>
+  <tr>
+    <td>ANCH</td>
+    <td><a href="{{ url_for('subject', subject='ANCH') }}">Ancient History</a></td>
+  </tr>
+  <tr>
+    <td>AODA</td>
+    <td><a href="{{ url_for('subject', subject='AODA') }}">Access Ont. Disabilities</a></td>
+  </tr>
+  <tr>
+    <td>APSC</td>
+    <td><a href="{{ url_for('subject', subject='APSC') }}">Applied Science</a></td>
+  </tr>
+</table>
+<h2>Courses</h2>
+<table class="table">
+  <tr>
+    <td>ANAT</td>
+    <td><a href="{{ url_for('subject', subject='ANAT') }}">Anatomy and Cell Biology</a></td>
+  </tr>
+  <tr>
+    <td>ANCH</td>
+    <td><a href="{{ url_for('subject', subject='ANCH') }}">Ancient History</a></td>
+  </tr>
+  <tr>
+    <td>AODA</td>
+    <td><a href="{{ url_for('subject', subject='AODA') }}">Access Ont. Disabilities</a></td>
+  </tr>
+  <tr>
+    <td>APSC</td>
+    <td><a href="{{ url_for('subject', subject='APSC') }}">Applied Science</a></td>
+  </tr>
+</table>
+{% endblock %}

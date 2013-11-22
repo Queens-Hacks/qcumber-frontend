@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block pageclass %}home{% endblock %}
+
+{% block body %}
+<div class="call2action">
+  <img class="logo" src="{{ url_for('static', filename='img/LogoSmall.png') }}">
+  <h3>
+    The refreshing (unofficial) course catalogue for Queen's University students.
+    <sup><a title="Learn More" href="{# url_for('about') #}">[?]</a></sup>
+  </h3>
+  <form class="search-form" role="search">
+    <div class="form-group">
+      <input id="home-search-box" name="q" type="text" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Search Courses</button>
+    <a href="{{ url_for('catalog') }}" class="btn btn-info">Browse the Catalog</a>
+  </form>
+
+  <p>Love Qcumber? Like us on Facebook!</p>
+  <div class="fb-like" data-href="https://facebook.com/QcumberQueens" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Qcumber</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
+  </head>
+
+  <body>
+    {# Facebook Javascript SDK #}
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=154795074698928";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    {# Include the navigation bar #}
+    {% include "navbar.html" %}
+
+    <div id="page-wrapper" class="{% block pageclass %}{% endblock %}">
+      <div class="container">
+        <div id="content" class="updatable">
+          {% block body %}{% endblock %}
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.djax.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</head>
