@@ -3,7 +3,10 @@
   <head>
     <title>Qcumber</title>
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
+
+    {% assets "css_all" %}
+      <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
   </head>
 
   <body>
@@ -16,9 +19,20 @@
       js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=154795074698928";
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
+
     {# Include the navigation bar #}
     {% include "navbar.html" %}
 
+    <div class="page" style="height: 10px;">
+      <div class="test">
+      </div>
+      <div class="test">
+      </div>
+      <div class="test">
+      </div>
+      <div class="test">
+      </div>
+    </div>
     <div id="page-wrapper" class="{% block pageclass %}{% endblock %}">
       <div class="container">
         <div id="content" class="updatable">
@@ -26,9 +40,8 @@
         </div>
       </div>
     </div>
-    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jquery.djax.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% assets "js_all" %}
+      <script src="{{ ASSET_URL }}"></script>
+    {% endassets %}
   </body>
 </head>

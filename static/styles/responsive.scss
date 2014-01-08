@@ -1,0 +1,49 @@
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1200px;
+
+$screen-xs-max: $screen-sm-min - 1;
+$screen-sm-max: $screen-md-min - 1;
+$screen-md-max: $screen-lg-min - 1;
+
+$grid-gutter: 5px;
+
+@mixin respond-min($media) {
+  @if $media == xs {
+    @content;
+  }
+  @if $media == sm {
+    @media only screen and (min-width: $screen-sm-min) { @content; }
+  }
+  @if $media == md {
+    @media only screen and (min-width: $screen-md-min) { @content; }
+  }
+  @if $media == lg {
+    @media only screen and (min-width: $screen-lg-min) { @content; }
+  }
+}
+
+@mixin respond-max($media) {
+  @if $media == xs {
+    @media only screen and (max-width: $screen-xs-max) { @content; }
+  }
+  @if $media == sm {
+    @media only screen and (max-width: $screen-sm-max) { @content; }
+  }
+  @if $media == md {
+    @media only screen and (max-width: $screen-md-max) { @content; }
+  }
+  @if $media == lg {
+    @content; 
+  }
+}
+
+@mixin col($width, $media) {
+  @include respond-min($media) {
+    width: ($width / 12) * 100%;
+  }
+  padding-left: $grid-gutter;
+  padding-right: $grid-gutter;
+  margin: 0px;
+  float: left;
+}

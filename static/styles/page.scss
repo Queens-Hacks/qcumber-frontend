@@ -1,0 +1,15 @@
+@import "responsive";
+
+.page {
+  width: 600px;
+  margin: 0px auto;
+  .test {
+    @include col(3, md);
+    height: 10px;
+    background-color: #ff0000;
+  }
+  .test2 {
+    @include col(3, md);
+    height: 5px;
+  }
+}

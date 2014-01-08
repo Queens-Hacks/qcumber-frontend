@@ -1,10 +1,7 @@
 Flask==0.10.1
-Flask-Gears==0.2
-Flask-Script==0.6.3
-Gears==0.6.1
 Jinja2==2.7.1
 MarkupSafe==0.18
 Werkzeug==0.9.4
-gears-less==0.3.1
+beautifulsoup4==4.3.2
 itsdangerous==0.23
-wsgiref==0.1.2
+jac==0.9

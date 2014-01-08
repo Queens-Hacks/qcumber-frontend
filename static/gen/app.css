@@ -1,0 +1,44 @@
+/* line 3, /Users/michael/Coding/Python/qcumber/qcumber-frontend/static/styles/page.scss */
+.page {
+  width: 600px;
+  margin: 0px auto;
+}
+/* line 6, /Users/michael/Coding/Python/qcumber/qcumber-frontend/static/styles/page.scss */
+.page .test {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 0px;
+  float: left;
+  height: 10px;
+  background-color: #ff0000;
+}
+@media only screen and (min-width: 992px) {
+  /* line 6, /Users/michael/Coding/Python/qcumber/qcumber-frontend/static/styles/page.scss */
+  .page .test {
+    width: 25%;
+  }
+}
+/* line 11, /Users/michael/Coding/Python/qcumber/qcumber-frontend/static/styles/page.scss */
+.page .test2 {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 0px;
+  float: left;
+  height: 5px;
+}
+@media only screen and (min-width: 992px) {
+  /* line 11, /Users/michael/Coding/Python/qcumber/qcumber-frontend/static/styles/page.scss */
+  .page .test2 {
+    width: 25%;
+  }
+}
+
+/* line 5 */
+* {
+  box-sizing: border-box;
+}
+
+/* line 9 */
+h3 {
+  color: green;
+}
