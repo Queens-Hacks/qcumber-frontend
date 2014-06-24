@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <div class="tinylogo"><a href="/"><img src="{{ url_for('static', filename='images/qcumber-logo-tiny.png') }}" alt="Qcumber"></a></div>
+
+    {% block contents %}{% endblock %}
+
+  </body>
+</html>

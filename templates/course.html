@@ -1,0 +1,18 @@
+
+{% extends "tmpl.html" %}
+
+{% block title %}{{ course.subject }} {{ course.number }} - Qcumber{% endblock %}
+
+{% block contents %}
+<h3 class="pagetitle">{{ course.subject }} {{ course.number }} - {{ course.title }}</h3>
+<p>Back to <a href="/catalog/{{ subject.abbreviation }}">{{ subject.title }}</a></p>
+
+<h4>Description</h4>
+<p>{{ course.description }}</p>
+
+<h4>Enrollment Requirements</h4>
+<p>{{ course.enrollment_requirement }}</p>
+
+<h4>Units</h4>
+<p>{{ course.units }}</p>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "tmpl.html" %}
+
+{% block title %}Qcumber{% endblock %}
+
+{% block contents %}
+<h1 class="title"><img src="{{ url_for('static', filename='images/qcumber-logo.png') }}" alt="Qcumber"></h1>
+<h2 class="subtitle">The refreshing (unofficial) course catalog for Queen's</h2>
+
+<div class="searchbox">
+  <form action="/search" method="get">
+    <input type="text" name="q" placeholder="query">
+    <input type="submit" value="Search">
+  </form>
+</div>
+
+<ul class="catalog-scan">
+  {% for letter in letters %}
+    <li><a href="#{{letter.letter}}">{{letter.letter}}</a></li>
+  {% endfor %}
+</ul>
+
+<div class="catalog">
+  {% for letter in letters %}
+    <h3><a id="{{letter.letter}}">{{ letter.letter | upper }}</a></h3>
+    <ul>
+    {% for subject in letter.subjects %}
+      <li><a href="/catalog/{{subject.abbreviation}}">{{subject.abbreviation}} - {{subject.title}}</a></li>
+    {% endfor %}
+    </ul>
+  {% endfor %}
+</div>
+{% endblock %}
