@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static',  filename='styles/styles.css') }}">
   </head>
   <body>
     <div class="tinylogo"><a href="/"><img src="{{ url_for('static', filename='images/qcumber-logo-tiny.png') }}" alt="Qcumber"></a></div>
