@@ -5,11 +5,9 @@
 {% block contents %}
 <h3 class="pagetitle">Results</h3>
 
-{% if results %}
+{% if courses %}
+{% include "components/course_listing.html" %}
 <ul class="results">
-  {% for course in results %}
-  <li><a href="/catalog/{{course.subject}}/{{course.number}}">{{course.subject}} {{course.number}} - {{course.title}}</a> ({{course.units}} units)</li>
-  {% endfor %}
 </ul>
 {% else %}
 <p>Your search for {{ query }} turned up no results. Sorry!</p>

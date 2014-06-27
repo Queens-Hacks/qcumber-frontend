@@ -1,0 +1,14 @@
+<table class="course-listing">
+  {% for course in courses %}
+    <tr>
+      <td>{{ course.subject }} {{ course.number }}</td>
+      <td>
+        <a href="/catalog/{{ course.subject }}/{{ course.number }}">
+          {{ course.title }}
+          <span class="season-tag season-{{ course.typically_offered }}">{{ course.typically_offered }}</span>
+        </a>
+      </td>
+      <td>{{ course.units }} units</td>
+    </tr>
+  {% endfor %}
+</table>

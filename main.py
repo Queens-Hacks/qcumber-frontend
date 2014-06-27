@@ -185,7 +185,7 @@ def search():
 
     reses = [x['_source'] for x in results]
 
-    return render_template('search.html', query=query, results=reses)
+    return render_template('search.html', query=query, courses=reses)
 
 if __name__ == '__main__':
     app.run(port=3000)
