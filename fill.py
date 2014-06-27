@@ -1,9 +1,36 @@
 #!/usr/bin/env python
 
 from elasticsearch import Elasticsearch
+from datetime import datetime
 import os
 import json
 
+def is_current(section):
+    """
+    This function determines if a given section is current.
+    I haven't checked to make sure that the logic makes sense... someone should do that
+
+    If the event is in the future, it should always be included.
+    If the event is in the past by more than 2 seasons, it should be excluded
+    """
+    if section['season'] == 'Winter':
+        season = 0
+    elif section['season'] == 'Summer':
+        season = 1
+    else:
+        season = 2
+
+    year = int(section['year'])
+    section_num = 3 * year + season
+
+    now = datetime.now()
+    now_num = 3 * now.year + ((now.month - 1) // 4)
+
+    return now_num - section_num <= 2
+
+####################
+# Import Functions #
+####################
 def courses(es):
     courses = os.listdir(os.path.join('out', 'courses'))
     for course in courses:
@@ -23,6 +50,8 @@ def sections(es):
             sd = sectiondata['basic']
             sd['classes'] = sectiondata['classes']
 
+            if not is_current(sd): continue # Reject non-current sections
+
             es.index(index='qcumber', doc_type='section', id='{year} {season} {subject} {course} {solus_id}'.format(**sd), body=sd)
 
 def subjects(es):
@@ -41,12 +70,13 @@ def textbooks(es):
             es.index(index='qcumber', doc_type='textbook', id=isbn, body=textbookdata)
 
 def main() :
+    # Connect to the Elasticsearch instance
     es = Elasticsearch()
-    #courses(es)
-    #sections(es)
-    #subjects(es)
+
+    courses(es)
+    sections(es)
+    subjects(es)
     textbooks(es)
-    pass
 
 if __name__ == '__main__':
     main()

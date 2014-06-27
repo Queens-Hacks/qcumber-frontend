@@ -148,8 +148,21 @@ header.navbar {
   font-size: 26px;
   font-weight: normal;
 
+  margin-bottom: 10px;
+
   @media screen and (max-width: 640px) {
     font-size: 20px;
+  }
+}
+
+.menu-options {
+  display: block;
+  text-align: center;
+  padding: 0px 10px;
+
+  li {
+    display: inline-block;
+    margin: 2px;
   }
 }
 
@@ -419,12 +432,11 @@ h2.course-name {
 /*****************
  * Page headings *
  *****************/
-h3 {
+h1, h2, h3, h4, h5 {
   margin-left: 5px;
 }
 
 h4 {
-  margin-left: 5px;
   margin-bottom: 10px;
 
   small {
@@ -437,4 +449,6 @@ p {
   margin-right: 5px;
 }
 
-
+footer.nav-footer {
+  border-top: 1px solid #ddd;
+}

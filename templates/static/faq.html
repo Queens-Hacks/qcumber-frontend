@@ -1,0 +1,178 @@
+{% extends "tmpl.html" %}
+
+{% block title %}FAQ - Qcumber{% endblock %}
+
+{% block contents %}
+<h1>FAQ</h1>
+<h3>Questions we assume you will ask</h3>
+
+<ul>
+  <li class="faq-entry">
+    <h4>
+      What is Qcumber?
+    </h4>
+    <p>
+      Qcumber is the easy-to-use, unofficial course catalogue for Queen’s University undergraduate and graduate students. It was created by students to allow open and convenient access to course and textbook information, as well as past exams, links to departments, and other helpful resources. It is a work in progress with a big vision, so keep an eye out for course ratings, automatic timetables, or other fun and useful features in the future. You can check out our <a href="/about">about</a> page for more information on that.
+    </p>
+  </li>
+
+
+  <li class="faq-entry">
+    <h4>
+      Why is Qcumber "unofficial"?
+    </h4>
+    <p>
+      Qcumber is made by a fourth-year computing student, and is not in any way officially affiliated with Queen’s University. That may or may not change in the future, but for now, we've got to keep that label to avoid misleading anyone!
+    </p>
+  </li>
+
+
+  <li class="faq-entry">
+    <h4>
+      How accurate is Qcumber's information?
+    </h4>
+    <p>
+      We've spent a lot of time making sure Qcumber's info reflects exactly what's shown in SOLUS' catalog. Qcumber is updated regularly and, to the best of our knowledge, achieves that goal upon updates, but you should still confirm your timetable just to be sure. To keep things transparent, the last time information for a particular course on Qcumber was updated is shown below its description (e.g. "Data collected 1 hour, 40 minutes ago."). You can definitely help us by pointing out inconsistencies!
+    </p>
+  </li>
+
+
+
+  <li class="faq-entry">
+    <h4>
+      SOLUS is confusing/difficult/frustrating to use. How do I confirm my courses with SOLUS?
+    </h4>
+    <p>
+      We understand. Really, we do. The easiest way we've found to use choose and register courses on SOLUS (in conjunction with Qcumber, of course) is as follows:
+    </p>
+
+    <ul>
+      <li>1) Find courses on Qcumber. Take note of the four-digit section code of each section you want to take.</li>
+      <li>2) Click "plan" on SOLUS and search the four- or five-digit section code on the left-hand bar.</li>
+      <li>3) Make sure the course and timeslot information matches that on Qcumber.</li>
+      <li>4) Click "add to shopping cart"</li>
+      <li>5) Once you’ve completed this for all of your courses, click "verify my courses" to check for exclusions and timetable conflicts.</li>
+      <li>6) Log-in once your time-ticket begins (you'll get an email about it) and click "enroll".</li>
+      <li>7) Pray SOLUS does not crash. If you have any difficulty with course selection, timetabling, prerequisites, conflicts or anything of that nature, check out our <a href="/resources">resources page</a> for ways to find help.</li>
+    </ul>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      How does Qcumber work?
+    </h4>
+    <p>
+      Qcumber is composed of two major parts: a <a href="https://github.com/Queens-Hacks/qcumber-scraper">scraper</a> which connects to SOLUS and gets the course information off of it, and <a href="https://github.com/Queens-Hacks/qcumber-frontend">frontend</a> which is what you are looking at right now. They are both written in <a href="http://python.org">Python</a>, and are open-source. Check out the <a href="/about">About</a> page for more information about how you can contribute!
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      Will Qcumber replace SOLUS one day?
+    </h4>
+    <p>
+      SOLUS serves a lot of purposes that Qcumber makes no effort to address. (P.S. You should always confirm course information with SOLUS. Qcumber is the unofficial course catalogue. SOLUS is the official one.)
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      I have a question about a course/subject/concentration.
+    </h4>
+    <p>
+      Psh, that’s not a question! Well, Qcumber doesn't yet attempt to offer guidance on what courses you should take. You should contact the department for that kind of information, or one of the other wonderful resources you can find <a href="/resources">here</a>.
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      What new features can we look forward to?        
+    </h4>
+    <p>
+      Qcumber development has slowed over the lest few months. It's just a free-time project after all! We have the following features mapped out, but it may be a significant time before they are included (if ever).
+    </p>
+    <ul>
+      <li>personalized shortlists for subjects/courses of interest</li>
+      <li>course ratings</li>
+      <li>easy-to-view, printable timetables</li>
+      <li>a tool to help you find that elusive final course</li>
+    </ul>
+  </li>
+
+
+  <li class="faq-entry">
+    <h4>
+      Can you let me know when new features come out?
+    </h4>
+    <p>
+      Sure! Like us on <a href="https://www.facebook.com/QcumberQueens">Facebook</a>, or follow us on <a href="https://twitter.com/QcumberQueens">Twitter</a>.
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      Are you making money off this?
+    </h4>
+    <p>
+      No. Actually, I'm paying for hosting and domain registration costs myself. Let me know if you want to buy me or the team a coffee! :)
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      How can I help?
+    </h4>
+    <p>
+      Feedback, suggestions, and favourite recipes are welcome at <a href="mailto:feedback@qcumber.ca">feedback@qcumber.ca</a>!
+    </p>
+    <p>
+      If you’re an interested developer, we'd also love to talk. ;)
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      What’s your favourite way to eat cucumber?
+    </h4>
+    <p>
+      On the cob. Maybe with salt and pepper. 
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      Does Qcumber mean anything?
+    </h4>
+    <p>
+      Quasi-Cylindrical Underappreciated Mostly-Beloved Edible Refreshment.
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      How do you feel about sea cucumbers?
+    </h4>
+    <p>
+      Posers.
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      Do you have any interesting historical notes for me?
+    </h4>
+    <p>
+      I'm so glad you asked. Did you know that back in the days of QCARD (SOLUS' predecessor, rest its soul), there was a project similar in spirit to Qcumber? It was called "<a href="http://zalbee.intricus.net/qcard/">QCARD Wrapper</a>". Yeah, its rhymes were so potent, et cetera et cetera.
+    </p>
+  </li>
+
+  <li class="faq-entry">
+    <h4>
+      I have more questions.
+    </h4>
+    <p>
+      Please feel free to send them to <a href="mailto:feedback@qcumber.ca">feedback@qcumber.ca</a>! :)
+    </p>
+  </li>
+</ul>
+{% endblock %}

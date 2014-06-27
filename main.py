@@ -201,5 +201,24 @@ def search():
 
     return render_template('search.html', query=query, courses=reses)
 
+###############
+# STATIC URLS #
+###############
+
+@app.route('/faq')
+def faq(): return render_template('static/faq.html')
+
+@app.route('/resources')
+def resources(): return render_template('static/resources.html')
+
+@app.route('/about')
+def about(): return render_template('static/about.html')
+
+@app.route('/contact')
+def contact(): return render_template('static/contact.html')
+
+@app.route('/issues')
+def issues(): return render_template('static/issues.html')
+
 if __name__ == '__main__':
     app.run(port=3000)
