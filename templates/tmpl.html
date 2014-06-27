@@ -16,6 +16,7 @@
       js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=427767607365577&version=v2.0";
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
+
     <!-- Done facebook schenanigans -->
     
     <header class="navbar">
@@ -31,7 +32,9 @@
       </div>
     </header>
 
-    {% block contents %}{% endblock %}
+    <section class="contents">
+      {% block contents %}{% endblock %}
+    </section>
 
   </body>
 </html>

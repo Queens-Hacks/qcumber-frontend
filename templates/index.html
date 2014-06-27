@@ -19,7 +19,8 @@
 
 <div class="catalog">
   {% for letter in letters %}
-    <h3><a id="{{letter.letter}}">{{ letter.letter | upper }}</a></h3>
+    <a class="top-link" href="#">back up</a>
+    <h3 class="letter"><a id="{{letter.letter}}">{{ letter.letter | upper }}</a></h3>
     <ul>
     {% for subject in letter.subjects %}
       <li><a href="/catalog/{{subject.abbreviation}}">{{subject.abbreviation}} - {{subject.title}}</a></li>
