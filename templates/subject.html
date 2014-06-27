@@ -7,5 +7,7 @@
 {% for career, courses in careers %}
   <h4>{{ career }}</h4>
   {% include "components/course_listing.html" %}
+{% else %}
+<p>This subject has no courses.</p>
 {% endfor %}
 {% endblock %}

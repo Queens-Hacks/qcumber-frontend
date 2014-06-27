@@ -1,55 +1,85 @@
-
 {% extends "tmpl.html" %}
 
 {% block title %}{{ course.subject }} {{ course.number }} - Qcumber{% endblock %}
 
 {% block contents %}
-<h3 class="pagetitle">{{ course.subject }} {{ course.number }} - {{ course.title }}</h3>
-<p>Back to <a href="/catalog/{{ subject.abbreviation }}">{{ subject.title }}</a></p>
+<small class="extra-course-info">{{ course.grading_basis }}, {{ course.career }}, {{ course.units }} units.</small>
+<h2 class="course-name">
+  <a href="/catalog/{{ course.subject }}">{{ course.subject }}</a> {{ course.number }}
+  <small>{{ course.title }}</small>
+</h2>
 
 <h4>Description</h4>
-<p>{{ course.description }}</p>
+<p>{{ course.description | default('No course description on SOLUS', True) }}</p>
 
 <h4>Enrollment Requirements</h4>
-<p>{{ course.enrollment_requirement }}</p>
+<p>{{ course.enrollment_requirement | default('No enrollment requirements listed on SOLUS', True) }}</p>
 
-<h4>Units</h4>
-<p>{{ course.units }}</p>
-
+{% if textbooks %}
 <h4>Textbooks</h4>
-<ul>
-  {% for textbook in textbooks %}
-  <li><a href="{{ textbook.listing_url }}">{{ textbook.title }}</a> {% if textbook.required %}(required){% else %}(optional){% endif %}</li>
-  {% endfor %}
-</ul>
+<div class="textbooks">
+  <table>
+    <tr>
+      <th>Title</th>
+      <th>Authors</th>
+      <th>Required</th>
+      <th>Price</th>
+    </tr>
+    {% for textbook in textbooks %}
+    <tr>
+      <td><a href="{{ textbook.listing_url }}">{{ textbook.title }}</a></td>
+      <td>{{ textbook.authors }}</td>
+      <td>{% if textbook.required %}Yes{% else %}No{% endif %}</td>
+      <td>{{ textbook.new_price }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <div class="extra-info">Data also avaliable at <a href="http://campusbookstore.com/" target="_blank">The Campus Bookstore</a>. Is something missing? Please let us know at <a href="mailto: feedback@qcumber.ca">feedback@qcumber.ca</a>. :)</div>
+</div>
+{% else %}
+<h4>Textbooks <small>We didn't find any for this course at <a href="http://campusbookstore.com/" target="_blank">The Campus Bookstore</a></small></h4>
+{% endif %}
 
 <h4>Sections</h4>
+
 {% for term, sections in terms.iteritems() %}
 <div class="term">
-<h5>{{ term }}</h5>
-<ul>
-  {% for section in sections %}
-  <li>
-    <header>{{ section.type }}</header>
-    <table>
-      {% for class in section.classes %}
-      <tr>
-        <td>{{ class.day_of_week | dayofweek }} {{ class.start_time | timeformat }} - {{ class.end_time | timeformat }}</td>
-        <td>
-          <ul>
-          {% for instructor in class.instructors %}
-            <li>{{ instructor }}</li>
-          {% endfor %}
-          </ul>
-        </td>
-        <td>{{ class.location }}</td>
-        <td>{{ class.term_start | dayformat }} - {{ class.term_end | dayformat }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-  </li>
-  {% endfor %}
-</ul>
+  <h4>{{ term }}</h4>
+  <ul class="section-list">
+    {% for section in sections %}
+    <li class="section">
+      <header>{{ section.type | fancy_section_type }} <small>({{ section.class_num }})</small></header>
+      <table>
+        {% for class in section.classes %}
+        <tr>
+          {% if class.day_of_week %}
+          <td>{{ class.day_of_week | dayofweek }} {{ class.start_time | timeformat }} - {{ class.end_time | timeformat }}</td>
+          {% else %}
+          <td>TBA</td>
+          {% endif %}
+
+          <td class="instructors">
+            <ul>
+            {% for instructor in class.instructors %}
+              <li>{{ instructor }}</li>
+            {% else %}
+              <li>TBA</li>
+            {% endfor %}
+            </ul>
+          </td>
+
+          <td class="location">{{ class.location }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </li>
+    {% endfor %}
+  </ul>
 </div>
+{% else %}
+<p>This course has no sections scheduled (According to the SOLUS course catalog).</p>
 {% endfor %}
+
+<p class="extra-info">Is something missing? Check the <a href="/issues">known course listing issues</a>, and let us know at <a href="mailto: feedback@qcumber.ca">feedback@qcumber.ca</a>. :)</p>
+
 {% endblock %}

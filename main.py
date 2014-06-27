@@ -53,6 +53,20 @@ def format_dow(value):
     else:
         return 'N/A'
 
+@app.template_filter('fancy_section_type')
+def fancy_section_type(section):
+    if section == 'LEC':
+        return 'Lecture'
+    elif section == 'LAB':
+        return 'Laboratory'
+    elif section == 'TUT':
+        return 'Tutorial'
+    elif section == 'PRA':
+        return 'Practicum'
+    elif section == 'COR':
+        return 'Correspondence'
+    return section
+
 @app.route('/')
 def index():
     # Get all of the subjects
