@@ -1,21 +1,18 @@
 {% extends "tmpl.html" %}
 
-{% block title %}Qcumber{% endblock %}
+{% block title %}{{ query }} - Qcumber Search{% endblock %}
 
 {% block contents %}
-<div class="searchbox">
-  <form action="/search" method="get">
-    <input type="text" name="q" placeholder="query" value="{{ query }}">
-    <input type="submit" value="Search">
-  </form>
-</div>
-
 <h3 class="pagetitle">Results</h3>
 
+{% if results %}
 <ul class="results">
   {% for course in results %}
   <li><a href="/catalog/{{course.subject}}/{{course.number}}">{{course.subject}} {{course.number}} - {{course.title}}</a> ({{course.units}} units)</li>
   {% endfor %}
 </ul>
+{% else %}
+<p>Your search for {{ query }} turned up no results. Sorry!</p>
+{% endif %}
 
 {% endblock %}

@@ -3,14 +3,12 @@
 {% block title %}Qcumber{% endblock %}
 
 {% block contents %}
-<h1 class="title"><img src="{{ url_for('static', filename='images/qcumber-logo.png') }}" alt="Qcumber"></h1>
-<h2 class="subtitle">The refreshing (unofficial) course catalog for Queen's</h2>
+<h1 class="biglogo"><img src="{{ url_for('static', filename='images/qcumber-logo.png') }}" alt="Qcumber"></h1>
+<h2 class="slogan">The refreshing (unofficial) course catalog for Queen's</h2>
 
-<div class="searchbox">
-  <form action="/search" method="get">
-    <input type="text" name="q" placeholder="query">
-    <input type="submit" value="Search">
-  </form>
+<!-- Facebook like button -->
+<div class="fb-like-wrapper">
+  <div class="fb-like" data-href="https://www.facebook.com/QcumberQueens" data-layout="standard" data-action="like" data-show-faces="true" data-share="true" data-width="300"></div>
 </div>
 
 <ul class="catalog-scan">

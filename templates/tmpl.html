@@ -1,11 +1,35 @@
 <!doctype html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static',  filename='styles/styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
   </head>
   <body>
-    <div class="tinylogo"><a href="/"><img src="{{ url_for('static', filename='images/qcumber-logo-tiny.png') }}" alt="Qcumber"></a></div>
+    <!-- Facebook schenanigans -->
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=427767607365577&version=v2.0";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <!-- Done facebook schenanigans -->
+    
+    <header class="navbar">
+      <a class="tinylogo" href="/"></a>
+
+      <div class="wrapper">
+        <form action="/search" method="get">
+          <input type="submit" class="search-button" value="Search">
+          <div class="query-wrapper">
+            <input type="text" class="query-text" name="q" placeholder="Search Courses on Qcumber" value="{{ query }}">
+          </div>
+        </form>
+      </div>
+    </header>
 
     {% block contents %}{% endblock %}
 

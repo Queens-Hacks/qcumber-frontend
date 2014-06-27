@@ -88,7 +88,10 @@ def subject(subject):
     courses = sorted([x['_source'] for x in res], key=lambda x: x['number'])
     careers = group_courses(courses)
 
-    return render_template('subject.html', subject=sub['_source'], careers=careers)
+    return render_template('subject.html',
+            subject=sub['_source'],
+            careers=careers,
+            query=sub['_source']['abbreviation'])
 
 @app.route('/catalog/<subject>/<course>')
 def course(subject, course):
@@ -138,15 +141,37 @@ def course(subject, course):
 
     # sections = [x['_source'] for x in sects]
 
-    return render_template('course.html', subject=sub['_source'], course=course['_source'], terms=terms, textbooks=tbooks)
+    return render_template('course.html',
+            subject=sub['_source'],
+            course=course['_source'],
+            terms=terms,
+            textbooks=tbooks,
+            query='{} {}'.format(sub['_source']['abbreviation'], course['_source']['number']))
 
-subjectre = r'^[A-Za-z]{2,4}$'
-coursere = r'^[A-Za-z]{2,2} [A-Za-z0-9]{2,4}$'
+subjectre = re.compile(r'^([A-Za-z]{2,4})$')
+coursere = re.compile(r'^([A-Za-z]{2,4}) ([A-Za-z0-9]{2,4})$')
 @app.route('/search')
 def search():
     query = request.args.get('q', '')
     if query.strip() == '':
         return redirect('/')
+
+    # Check if there is a course/subject with the exact name
+    subject_match = subjectre.match(query)
+    if subject_match:
+        try:
+            subject = es.get(index='qcumber', doc_type='subject', id=query)
+            return redirect('/catalog/{}'.format(subject_match.group(1)))
+        except:
+            pass # The course doesn't exist
+
+    course_match = coursere.match(query)
+    if course_match:
+        try:
+            course = es.get(index='qcumber', doc_type='course', id=query)
+            return redirect('/catalog/{}/{}'.format(course_match.group(1), course_match.group(2)))
+        except:
+            pass # The course doesn't exist
 
     results = es.search(index='qcumber', doc_type='course', body={
         'query': {
