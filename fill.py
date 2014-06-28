@@ -5,14 +5,16 @@ from datetime import datetime
 import os
 import json
 
+ES_INDEX = 'qcumber'
+
 def is_current(section):
     """
     This function determines if a given section is current.
-    I haven't checked to make sure that the logic makes sense... someone should do that
 
     If the event is in the future, it should always be included.
-    If the event is in the past by more than 2 seasons, it should be excluded
+    If the event is in the past by more than a season, it should be excluded
     """
+
     if section['season'] == 'Winter':
         season = 0
     elif section['season'] == 'Summer':
@@ -26,7 +28,7 @@ def is_current(section):
     now = datetime.now()
     now_num = 3 * now.year + ((now.month - 1) // 4)
 
-    return now_num - section_num <= 2
+    return now_num - section_num <= 1
 
 ####################
 # Import Functions #
@@ -39,8 +41,10 @@ def courses(es):
             cd = coursedata['basic']
             cd.update(coursedata['extra'])
 
+            print('Registering Course: {subject} {number}'.format(**cd))
+
             # Push the item into the elasticsearch
-            es.index(index='qcumber', doc_type='course', id='{subject} {number}'.format(**cd), body=cd)
+            es.index(index=ES_INDEX, doc_type='raw_course', id='{subject} {number}'.format(**cd), body=cd)
 
 def sections(es):
     sections = os.listdir(os.path.join('out', 'sections'))
@@ -52,14 +56,19 @@ def sections(es):
 
             if not is_current(sd): continue # Reject non-current sections
 
-            es.index(index='qcumber', doc_type='section', id='{year} {season} {subject} {course} {solus_id}'.format(**sd), body=sd)
+            print('Registering Section: {year} {season} {subject} {course}'.format(**sd))
+
+            es.index(index=ES_INDEX, doc_type='section', id='{year} {season} {subject} {course} {solus_id}'.format(**sd), body=sd)
 
 def subjects(es):
     subjects = os.listdir(os.path.join('out', 'subjects'))
     for subject in subjects:
         with open(os.path.join('out', 'subjects', subject)) as f:
             subjectdata = json.loads(f.read())
-            es.index(index='qcumber', doc_type='subject', id=subjectdata['abbreviation'], body=subjectdata)
+
+            print('Registering Subject: {abbreviation}'.format(**subjectdata))
+
+            es.index(index=ES_INDEX, doc_type='subject', id=subjectdata['abbreviation'], body=subjectdata)
 
 def textbooks(es):
     textbooks = os.listdir(os.path.join('out', 'textbooks'))
@@ -67,16 +76,61 @@ def textbooks(es):
         with open(os.path.join('out', 'textbooks', textbook)) as f:
             textbookdata = json.loads(f.read())
             isbn = textbookdata['isbn_13'] or textbookdata['isbn_10']
-            es.index(index='qcumber', doc_type='textbook', id=isbn, body=textbookdata)
+
+            print('Registering Textbook: {}'.format(isbn))
+
+            es.index(index=ES_INDEX, doc_type='textbook', id=isbn, body=textbookdata)
+
+def denormalized_courses(es):
+    """
+    The courses(es) function inserts the raw courses into the elasticsearch database.
+    For display purposes, it is nice to denormalize some of the section data into the
+    course objects stored in elasticsearch. This function does that.
+    """
+
+    raw_courses = es.search(index=ES_INDEX, doc_type='raw_course', body={
+        'query': {
+            'match_all': {}
+        }
+    }, size=100000)['hits']['hits']
+
+    # raw_courses = [x['_source'] for x in rraw_courses]
+
+    for raw_course in raw_courses:
+        course = raw_course['_source']
+        rsections = es.search(index=ES_INDEX, doc_type='section', body={
+            'query': {
+                'bool': {
+                    'must': [
+                        {
+                            'match': { 'course': course['number'] }
+                        },
+                        {
+                            'match': { 'subject': course['subject'] }
+                        }
+                    ]
+                }
+            }
+        }, size=100000)['hits']['hits']
+        sections = [x['_source'] for x in rsections]
+
+        # Record all of the seasons
+        course['seasons'] = list({x['season'] for x in sections})
+
+        print('Registering Denorm Course: {_id}'.format(**raw_course))
+
+        es.index(index=ES_INDEX, doc_type='course', id=raw_course['_id'], body=course)
+
 
 def main() :
     # Connect to the Elasticsearch instance
     es = Elasticsearch()
 
-    courses(es)
+    # courses(es)
     sections(es)
-    subjects(es)
-    textbooks(es)
+    # subjects(es)
+    # textbooks(es)
+    # denormalized_courses(es)
 
 if __name__ == '__main__':
     main()

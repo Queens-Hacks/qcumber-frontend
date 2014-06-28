@@ -16,6 +16,17 @@ app.config.update(
     PROPAGATE_EXCEPTIONS=True
 )
 
+def term_ordering(term):
+    year, season_name = term.split()
+    if season_name == 'Winter':
+        season = 0
+    elif season_name == 'Summer':
+        season = 1
+    else:
+        season = 2
+
+    return int(year) * 3 + season
+
 def group_courses(courses):
     """
     Groups courses based on the career. The groups are sorted in reverse
@@ -152,13 +163,15 @@ def course(subject, course):
         old.append(section['_source'])
         terms['{year} {season}'.format(**(section['_source']))] = old
 
+    sorted_terms = sorted(terms.iteritems(), key=lambda x: term_ordering(x[0]))
+
 
     # sections = [x['_source'] for x in sects]
 
     return render_template('course.html',
             subject=sub['_source'],
             course=course['_source'],
-            terms=terms,
+            terms=sorted_terms,
             textbooks=tbooks,
             query='{} {}'.format(sub['_source']['abbreviation'], course['_source']['number']))
 

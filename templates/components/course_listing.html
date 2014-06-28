@@ -5,7 +5,9 @@
       <td>
         <a href="/catalog/{{ course.subject }}/{{ course.number }}">
           {{ course.title }}
-          <span class="season-tag season-{{ course.typically_offered }}">{{ course.typically_offered }}</span>
+          {% for season in course.seasons %}
+          <span class="season-tag season-{{ season }}">{{ season }}</span>
+          {% endfor %}
         </a>
       </td>
       <td>{{ course.units }} units</td>
