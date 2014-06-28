@@ -98,6 +98,8 @@ def index():
 
 @app.route('/catalog/<subject>')
 def subject(subject):
+    subject = subject.upper()
+
     sub = es.get(index='qcumber', doc_type='subject', id=subject)
     if not sub['found']:
         abort(404)
@@ -120,6 +122,9 @@ def subject(subject):
 
 @app.route('/catalog/<subject>/<course>')
 def course(subject, course):
+    subject = subject.upper()
+    course = course.upper()
+
     # Get the subject
     sub = es.get(index='qcumber', doc_type='subject', id=subject)
     if not sub['found']:
@@ -184,18 +189,18 @@ def search():
         return redirect('/')
 
     # Check if there is a course/subject with the exact name
-    subject_match = subjectre.match(query)
+    subject_match = subjectre.match(query.upper())
     if subject_match:
         try:
-            subject = es.get(index='qcumber', doc_type='subject', id=query)
+            subject = es.get(index='qcumber', doc_type='subject', id=query.upper())
             return redirect('/catalog/{}'.format(subject_match.group(1)))
         except:
             pass # The course doesn't exist
 
-    course_match = coursere.match(query)
+    course_match = coursere.match(query.upper())
     if course_match:
         try:
-            course = es.get(index='qcumber', doc_type='course', id=query)
+            course = es.get(index='qcumber', doc_type='course', id=query.upper())
             return redirect('/catalog/{}/{}'.format(course_match.group(1), course_match.group(2)))
         except:
             pass # The course doesn't exist
