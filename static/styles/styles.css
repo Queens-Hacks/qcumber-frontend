@@ -154,6 +154,10 @@ header.navbar {
   .course-listing tr {
     background-color: #eee;
     border-bottom: 1px solid #ccc; }
+    .course-listing tr.unavaliable {
+      color: #aaa; }
+      .course-listing tr.unavaliable a {
+        color: #aaa; }
     .course-listing tr:hover {
       background-color: #ddd; }
     .course-listing tr:first-child td:first-child {

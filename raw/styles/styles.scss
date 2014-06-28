@@ -225,6 +225,14 @@ header.navbar {
     background-color: #eee;
     border-bottom: 1px solid #ccc;
 
+    &.unavaliable {
+      color: #aaa;
+
+      a {
+        color: #aaa;
+      }
+    }
+
     &:hover {
       background-color: #ddd;
     }
