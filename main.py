@@ -92,7 +92,7 @@ def index():
     letters = [{'letter': x} for x in "abcdefghijklmnopqrstuvwxyz"]
     for letter in letters:
         subjects = [i['_source'] for i in hits if i['_source']['abbreviation'][0].lower() == letter['letter']]
-        letter['subjects'] = subjects
+        letter['subjects'] = sorted(subjects, key=lambda x: x['abbreviation'])
 
     return render_template('index.html', letters=letters)
 
