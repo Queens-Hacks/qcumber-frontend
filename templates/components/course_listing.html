@@ -1,7 +1,7 @@
 <table class="course-listing">
   {% for course in courses %}
     <tr class="{% if course.seasons %}{% else %}unavaliable{% endif %}">
-      <td>{{ course.subject }} {{ course.number }}</td>
+      <td><a href="/catalog/{{ course.subject }}">{{ course.subject }}</a> {{ course.number }}</td>
       <td>
         <a href="/catalog/{{ course.subject }}/{{ course.number }}">
           {{ course.title }}

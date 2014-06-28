@@ -31,6 +31,16 @@ a {
   }
 }
 
+.toggler {
+  color: $link-color;
+  cursor: pointer;
+  
+  &:hover {
+    color: $link-hover-color;
+    text-decoration: underline;
+  }
+}
+
 .contents {
   max-width: $max-page-width;
   width: 100%;
@@ -247,6 +257,8 @@ header.navbar {
     }
 
     &:last-child {
+      border-bottom: 0px;
+
       td:first-child {
         border-bottom-left-radius: 5px;
       }
@@ -260,6 +272,14 @@ header.navbar {
   td {
     margin: 0px;
     padding: 5px;
+
+    &:first-child {
+      width: 14%;
+    }
+
+    &:last-child {
+      text-align: right;
+    }
   }
 }
 
@@ -375,12 +395,13 @@ h2.course-name {
   margin-top: 10px;
   
   h4 {
-    margin: 0px 0px 10px;
+    margin: 0px 0px 0px;
   }
 }
 
 .section-list {
   margin: 0px;
+  margin-top: 10px;
   padding: 0px;
 
   .section {
@@ -463,4 +484,9 @@ p {
 footer.nav-footer {
   margin-top: 10px;
   border-top: 1px solid #ddd;
+}
+
+// Collapsed elements
+.collapsed {
+  display: none;
 }

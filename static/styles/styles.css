@@ -15,6 +15,13 @@ a[href]:hover {
 a:visited {
   color: #369941; }
 
+.toggler {
+  color: #369941;
+  cursor: pointer; }
+  .toggler:hover {
+    color: #226029;
+    text-decoration: underline; }
+
 .contents {
   max-width: 800px;
   width: 100%;
@@ -164,13 +171,19 @@ header.navbar {
       border-top-left-radius: 5px; }
     .course-listing tr:first-child td:last-child {
       border-top-right-radius: 5px; }
-    .course-listing tr:last-child td:first-child {
-      border-bottom-left-radius: 5px; }
-    .course-listing tr:last-child td:last-child {
-      border-bottom-right-radius: 5px; }
+    .course-listing tr:last-child {
+      border-bottom: 0px; }
+      .course-listing tr:last-child td:first-child {
+        border-bottom-left-radius: 5px; }
+      .course-listing tr:last-child td:last-child {
+        border-bottom-right-radius: 5px; }
   .course-listing td {
     margin: 0px;
     padding: 5px; }
+    .course-listing td:first-child {
+      width: 14%; }
+    .course-listing td:last-child {
+      text-align: right; }
 
 .season-tag {
   font-family: 'Droid Sans', sans-serif;
@@ -254,10 +267,11 @@ h2.course-name {
   padding: 10px;
   margin-top: 10px; }
   .term h4 {
-    margin: 0px 0px 10px; }
+    margin: 0px 0px 0px; }
 
 .section-list {
   margin: 0px;
+  margin-top: 10px;
   padding: 0px; }
   .section-list .section {
     display: block;
@@ -305,3 +319,6 @@ p {
 footer.nav-footer {
   margin-top: 10px;
   border-top: 1px solid #ddd; }
+
+.collapsed {
+  display: none; }

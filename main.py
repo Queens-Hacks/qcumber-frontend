@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask, render_template, abort, redirect, url_for, request
+from flask import Flask, render_template, abort, redirect, url_for, request, Markup, escape
 from elasticsearch import Elasticsearch
 from datetime import datetime
 import dateutil.parser
@@ -41,6 +41,21 @@ def group_courses(courses):
 
     return reversed(sorted(grouped.iteritems(), key=lambda x: x[0]))
 
+@app.template_filter('nl2br')
+def nl2br(string):
+    return Markup('<br>'.join([escape(x) for x in string.split('\n')]))
+
+@app.template_filter('slugify')
+def slugify(value):
+    """TODO: Make this less lazy"""
+    return '_' + value.replace(' ', '-').lower()
+
+@app.template_filter('oldterm')
+def is_oldterm(term):
+    now = datetime.now()
+    now_rank = now.year * 3 + (now.month - 1) % 4
+    return now_rank > term_ordering(term)
+
 @app.template_filter('timeformat')
 def format_time(value):
     if value:
@@ -76,6 +91,10 @@ def fancy_section_type(section):
         return 'Practicum'
     elif section == 'COR':
         return 'Correspondence'
+    elif section == 'SEM':
+        return 'Seminar'
+    elif section == 'ONL':
+        return 'Online'
     return section
 
 @app.route('/')
@@ -206,6 +225,9 @@ def search():
             pass # The course doesn't exist
 
     results = es.search(index='qcumber', doc_type='course', body={
+        'sort': [
+            { 'number': { 'order': 'asc' } },
+        ],
         'query': {
             'query_string': {
                 'query': query.strip(),

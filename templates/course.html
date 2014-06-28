@@ -10,14 +10,18 @@
 </h2>
 
 <h4>Description</h4>
-<p>{{ course.description | default('No course description on SOLUS', True) }}</p>
+<p>{{ course.description | default('No course description on SOLUS', True) | nl2br }}</p>
 
 <h4>Enrollment Requirements</h4>
-<p>{{ course.enrollment_requirement | default('No enrollment requirements listed on SOLUS', True) }}</p>
+<p>{{ course.enrollment_requirement | default('No enrollment requirements listed on SOLUS', True) | nl2br }}</p>
 
 {% if textbooks %}
-<h4>Textbooks</h4>
-<div class="textbooks">
+<h4 data-collapse-trigger="#textbooks"
+    data-collapse-html="Textbooks <small>Click to show/hide textbooks</small>"
+    data-collapse-default="true">
+  Textbooks
+</h4>
+<div id="textbooks" class="textbooks">
   <table>
     <tr>
       <th>Title</th>
@@ -44,8 +48,11 @@
 
 {% for term, sections in terms %}
 <div class="term">
-  <h4>{{ term }}</h4>
-  <ul class="section-list">
+  <h4 data-collapse-trigger="#{{ term | slugify }}"
+      data-collapse-default="{{ term | oldterm | default('', True) }}">
+    {{ term }}
+  </h4>
+  <ul id="{{ term | slugify }}" class="section-list">
     {% for section in sections %}
     <li class="section">
       <header>{{ section.type | fancy_section_type }} <small>({{ section.class_num }})</small></header>
