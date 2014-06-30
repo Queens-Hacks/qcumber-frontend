@@ -2,10 +2,13 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width">
+
     <title>{% block title %}{% endblock %}</title>
+
     <link rel="stylesheet" href="{{ url_for('static',  filename='styles/styles.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
   </head>
+
   <body>
     <!-- Facebook schenanigans -->
     <div id="fb-root"></div>
@@ -20,22 +23,26 @@
     <!-- Done facebook schenanigans -->
     
     <header class="navbar">
-      <a class="tinylogo" href="/"></a>
+      <a class="tinylogo" href="{{ url_for('index') }}"></a>
 
       <div class="wrapper">
-        <form id="search-form" action="/search" method="get">
-          <input type="submit" class="search-button" value="Search">
+        <form id="search-form" action="{{ url_for('search') }}" method="get">
+          <button type="submit" class="search-button">Search</button>
+
           <button type="button"
                   class="refine-button"
                   data-collapse-trigger="#refine">+</button>
 
           <div class="query-wrapper">
-            <input type="text" id="query" class="query-text" name="q" placeholder="Search Courses on Qcumber" value="{{ query }}">
+            <input type="text"
+                   id="query"
+                   class="query-text"
+                   name="q"
+                   placeholder="Search Courses on Qcumber"
+                   value="{{ query }}">
           </div>
 
-          <div id="refine" class="refine collapsed">
-            {% include "components/refine.html" %}
-          </div>
+          {% include "components/refine.html" %}
         </form>
       </div>
     </header>
@@ -45,15 +52,10 @@
     </section>
 
     <footer class="nav-footer">
-      <ul class="menu-options">
-        <li><a href="/about">About</a></li>
-        <li><a href="/faq">FAQ</a></li>
-        <li><a href="/resources">Resources</a></li>
-        <li><a href="/issues">Issues</a></li>
-        <li><a href="/contact">Contact</a></li>
-      </ul>
+      {% include "components/navigation.html" %}
     </footer>
 
+    <!-- The scripts. XXX: Merge & Minify them -->
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/refine.js') }}"></script>
     <script src="{{ url_for('static', filename='js/collapse.js') }}"></script>

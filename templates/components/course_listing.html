@@ -1,10 +1,11 @@
 <table class="course-listing">
   {% for course in courses %}
     <tr class="{% if course.seasons %}{% else %}unavaliable{% endif %}">
-      <td><a href="/catalog/{{ course.subject }}">{{ course.subject }}</a> {{ course.number }}</td>
+      <td><a href="{{ url_for('subject', subject=course.subject) }}">{{ course.subject }}</a> {{ course.number }}</td>
       <td>
-        <a href="/catalog/{{ course.subject }}/{{ course.number }}">
+        <a href="{{ url_for('course', subject=course.subject, course=course.number) }}">
           {{ course.title }}
+
           {% for season in course.seasons %}
           <span class="season-tag season-{{ season }}">{{ season }}</span>
           {% endfor %}
@@ -14,3 +15,4 @@
     </tr>
   {% endfor %}
 </table>
+

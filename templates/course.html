@@ -5,7 +5,7 @@
 {% block contents %}
 <small class="extra-course-info">{{ course.grading_basis }}, {{ course.career }}, {{ course.units }} units.</small>
 <h2 class="course-name">
-  <a href="/catalog/{{ course.subject }}">{{ course.subject }}</a> {{ course.number }}
+  <a href="{{ url_for('subject', subject=course.subject) }}">{{ course.subject }}</a> {{ course.number }}
   <small>{{ course.title }}</small>
 </h2>
 
@@ -87,6 +87,6 @@
 <p>This course has no sections scheduled (According to the SOLUS course catalog).</p>
 {% endfor %}
 
-<p class="extra-info">Is something missing? Check the <a href="/issues">known course listing issues</a>, and let us know at <a href="mailto: feedback@qcumber.ca">feedback@qcumber.ca</a>. :)</p>
+<p class="extra-info">Is something missing? Check the <a href="{{ url_for('issues') }}">known course listing issues</a>, and let us know at <a href="mailto: feedback@qcumber.ca">feedback@qcumber.ca</a>. :)</p>
 
 {% endblock %}

@@ -3,14 +3,13 @@
 {% block title %}{{ query }} - Qcumber Search{% endblock %}
 
 {% block contents %}
+
 <h3 class="pagetitle">Results</h3>
 
 {% if courses %}
-{% include "components/course_listing.html" %}
-<ul class="results">
-</ul>
+  {% include "components/course_listing.html" %}
 {% else %}
-<p>Your search for {{ query }} turned up no results. Sorry!</p>
+  <p>Your search for {{ query }} turned up no results. Sorry!</p>
 {% endif %}
 
 {% endblock %}

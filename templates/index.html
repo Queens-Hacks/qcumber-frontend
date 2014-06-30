@@ -6,34 +6,37 @@
 <h1 class="biglogo"><img src="{{ url_for('static', filename='images/qcumber-logo.png') }}" alt="Qcumber"></h1>
 <h2 class="slogan">The refreshing (unofficial) course catalog for Queen's</h2>
 
-<ul class="menu-options">
-  <li><a href="/about">About</a></li>
-  <li><a href="/faq">FAQ</a></li>
-  <li><a href="/resources">Resources</a></li>
-  <li><a href="/issues">Issues</a></li>
-  <li><a href="/contact">Contact</a></li>
-</ul>
+{% include "components/navigation.html" %}
 
 <!-- Facebook like button -->
 <div class="fb-like-wrapper">
-  <div class="fb-like" data-href="https://www.facebook.com/QcumberQueens" data-layout="standard" data-action="like" data-show-faces="true" data-share="true" data-width="300"></div>
+  <div class="fb-like"
+       data-href="https://www.facebook.com/QcumberQueens"
+       data-layout="standard"
+       data-action="like"
+       data-show-faces="true"
+       data-share="true"
+       data-width="300"></div>
 </div>
 
 <ul class="catalog-scan">
   {% for letter in letters %}
-    <li><a href="#{{letter.letter}}">{{letter.letter}}</a></li>
+    <li><a href="#{{ letter.letter }}">{{letter.letter}}</a></li>
   {% endfor %}
 </ul>
 
 <div class="catalog">
   {% for letter in letters %}
-    <a class="top-link" href="#">back up</a>
-    <h3 class="letter"><a id="{{letter.letter}}">{{ letter.letter | upper }}</a></h3>
-    <ul>
+  <a class="top-link" href="#">back up</a>
+  <h3 class="letter"><a id="{{ letter.letter }}">{{ letter.letter | upper }}</a></h3>
+
+  <ul>
     {% for subject in letter.subjects %}
-      <li><a href="/catalog/{{subject.abbreviation}}">{{subject.abbreviation}} - {{subject.title}}</a></li>
+    <li>
+      <a href="{{ url_for('subject', subject=subject.abbreviation) }}">{{subject.abbreviation}} - {{subject.title}}</a>
+    </li>
     {% endfor %}
-    </ul>
+  </ul>
   {% endfor %}
 </div>
 {% endblock %}
