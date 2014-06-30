@@ -23,10 +23,18 @@
       <a class="tinylogo" href="/"></a>
 
       <div class="wrapper">
-        <form action="/search" method="get">
+        <form id="search-form" action="/search" method="get">
           <input type="submit" class="search-button" value="Search">
+          <button type="button"
+                  class="refine-button"
+                  data-collapse-trigger="#refine">+</button>
+
           <div class="query-wrapper">
-            <input type="text" class="query-text" name="q" placeholder="Search Courses on Qcumber" value="{{ query }}">
+            <input type="text" id="query" class="query-text" name="q" placeholder="Search Courses on Qcumber" value="{{ query }}">
+          </div>
+
+          <div id="refine" class="refine collapsed">
+            {% include "components/refine.html" %}
           </div>
         </form>
       </div>
@@ -46,6 +54,8 @@
       </ul>
     </footer>
 
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/refine.js') }}"></script>
     <script src="{{ url_for('static', filename='js/collapse.js') }}"></script>
   </body>
 </html>

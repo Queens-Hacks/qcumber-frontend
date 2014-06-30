@@ -1,4 +1,3 @@
-
 /* At some point there will be awesome styles here */
 
 $link-color: #369941;
@@ -47,60 +46,35 @@ a {
   margin: 0px auto;
 }
 
+@mixin bottom-line($color, $thickness) {
+  $line-color: darken($color, 15%);
+  background: $color;
+  border: none;
+  border-bottom: $thickness solid $line-color;
+  -webkit-box-shadow: inset 0 (-$thickness) $line-color;
+  box-shadow: inset 0 (-$thickness) $line-color;
+}
+
+@mixin nav-button($color) {
+  font-size: 22px;
+  margin-top: 10px;
+  -webkit-appearance: none;
+
+  float: right;
+  height: 40px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+
+  @include bottom-line($color, 2px)
+}
 /******************
  * Navigation Bar *
  ******************/
 header.navbar {
   background-color: #eee;
   border-bottom: 2px solid #bbb;
-
   height: 60px;
-
-  .wrapper {
-    width: 100%;
-    max-width: 700px;
-    margin: auto;
-  }
-
-  .query-wrapper {
-    overflow: hidden;
-  }
-
-  .query-text {
-    width: 100%;
-    height: 40px;
-    padding: 5px;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-
-    border: 0;
-    border-bottom: 2px solid #ddd;
-    -webkit-box-shadow: inset 0 -2px #ddd;
-    box-shadow: inset 0 -2px #ddd;
-  }
-
-  .search-button {
-    float: right;
-    width: 90px;
-    height: 40px;
-    color: white;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    background: #329a3f;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-
-    border: 0;
-    border-bottom: 2px solid #2c8737;
-    -webkit-box-shadow: inset 0 -2px #2c8737;
-    box-shadow: inset 0 -2px #2c8737;
-  }
-
-  input {
-    font-size: 22px;
-    margin-top: 10px;
-    -webkit-appearance: none;
-  }
 
   .tinylogo {
     display: block;
@@ -112,10 +86,90 @@ header.navbar {
     background-size: Auto 50px;
     background-repeat: no-repeat;
   }
-}
 
-@media screen and (max-width: 640px) {
-  header.navbar {
+  .wrapper {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+  }
+
+  .query-wrapper {
+    overflow: hidden;
+  }
+
+  input[type=text] {
+    width: 100%;
+    padding: 2px;
+    font-size: 22px;
+    margin-top: 10px;
+    -webkit-appearance: none;
+
+    @include bottom-line(#fff, 2px);
+  }
+
+  .query-text {
+    width: 100%;
+    height: 40px;
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    font-size: 22px;
+    margin-top: 10px;
+    -webkit-appearance: none;
+
+    @include bottom-line(#fff, 2px);
+  }
+
+  .search-button {
+    @include nav-button(#329a3f);
+    width: 90px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .refine-button {
+    @include nav-button(#6386ec);
+    width: 25px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .refine {
+    background-color: #eee;
+    z-index: 10;
+    position: absolute;
+    width: 100%;
+    max-width: 700px;
+    padding: 10px;
+    border: 2px solid #aaa;
+    border-top: none;
+    top: 58px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    input {
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+
+    input[type=text] {
+      border-radius: 5px;
+    }
+
+    input[type=checkbox] {
+      -webkit-appearance: checkbox;
+    }
+
+    .cb-label {
+      font-size: 90%;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    // MOBILE DEVICE CONFIGURATION
     height: auto;
     padding: 5px;
 
@@ -132,10 +186,19 @@ header.navbar {
     }
 
     .query-text {
-      // Center the text
       text-align: center;
-      // Add the border back to the rhs
-      border-radius: 5px;
+    }
+
+    .refine {
+      position: initial;
+      padding: 0;
+      padding-top: 10px;
+      border: none;
+    }
+
+    .refine-button {
+      border-bottom-right-radius: 5px;
+      border-top-right-radius: 5px;
     }
   }
 }
@@ -328,6 +391,16 @@ header.navbar {
     }
   }
 
+  &.season-Unoffered {
+    border: 1px solid #888;
+    background-color: #888;
+    padding-left: 6px;
+
+    &:before {
+      background: none;
+    }
+  }
+
   &:before {
     position: absolute;
     top: 0px;
@@ -489,4 +562,26 @@ footer.nav-footer {
 // Collapsed elements
 .collapsed {
   display: none;
+}
+
+/**********
+ * Refine *
+ **********/
+.refine {
+}
+
+.refine-item {
+  padding: 0px 10px;
+
+  input[type=text] {
+    display: block;
+    width: 100%;
+    border: 0px;
+    border-bottom: 2px solid #ddd;
+  }
+
+  input[type=checkbox]:checked + label {
+    opacity: 1;
+    filter: alpha(opacity=100)
+  }
 }

@@ -34,40 +34,6 @@ header.navbar {
   background-color: #eee;
   border-bottom: 2px solid #bbb;
   height: 60px; }
-  header.navbar .wrapper {
-    width: 100%;
-    max-width: 700px;
-    margin: auto; }
-  header.navbar .query-wrapper {
-    overflow: hidden; }
-  header.navbar .query-text {
-    width: 100%;
-    height: 40px;
-    padding: 5px;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border: 0;
-    border-bottom: 2px solid #ddd;
-    -webkit-box-shadow: inset 0 -2px #ddd;
-    box-shadow: inset 0 -2px #ddd; }
-  header.navbar .search-button {
-    float: right;
-    width: 90px;
-    height: 40px;
-    color: white;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    background: #329a3f;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border: 0;
-    border-bottom: 2px solid #2c8737;
-    -webkit-box-shadow: inset 0 -2px #2c8737;
-    box-shadow: inset 0 -2px #2c8737; }
-  header.navbar input {
-    font-size: 22px;
-    margin-top: 10px;
-    -webkit-appearance: none; }
   header.navbar .tinylogo {
     display: block;
     width: 160px;
@@ -77,22 +43,115 @@ header.navbar {
     background-image: url("../images/qcumber-logo-tiny.png");
     background-size: Auto 50px;
     background-repeat: no-repeat; }
+  header.navbar .wrapper {
+    width: 100%;
+    max-width: 700px;
+    margin: auto; }
+  header.navbar .query-wrapper {
+    overflow: hidden; }
+  header.navbar input[type=text] {
+    width: 100%;
+    padding: 2px;
+    font-size: 22px;
+    margin-top: 10px;
+    -webkit-appearance: none;
+    background: white;
+    border: none;
+    border-bottom: 2px solid #d9d9d9;
+    -webkit-box-shadow: inset 0 -2px #d9d9d9;
+    box-shadow: inset 0 -2px #d9d9d9; }
+  header.navbar .query-text {
+    width: 100%;
+    height: 40px;
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    font-size: 22px;
+    margin-top: 10px;
+    -webkit-appearance: none;
+    background: white;
+    border: none;
+    border-bottom: 2px solid #d9d9d9;
+    -webkit-box-shadow: inset 0 -2px #d9d9d9;
+    box-shadow: inset 0 -2px #d9d9d9; }
+  header.navbar .search-button {
+    font-size: 22px;
+    margin-top: 10px;
+    -webkit-appearance: none;
+    float: right;
+    height: 40px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    background: #329a3f;
+    border: none;
+    border-bottom: 2px solid #1f6027;
+    -webkit-box-shadow: inset 0 -2px #1f6027;
+    box-shadow: inset 0 -2px #1f6027;
+    width: 90px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px; }
+  header.navbar .refine-button {
+    font-size: 22px;
+    margin-top: 10px;
+    -webkit-appearance: none;
+    float: right;
+    height: 40px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    background: #6386ec;
+    border: none;
+    border-bottom: 2px solid #1f51e4;
+    -webkit-box-shadow: inset 0 -2px #1f51e4;
+    box-shadow: inset 0 -2px #1f51e4;
+    width: 25px; }
+    header.navbar .refine-button:hover {
+      text-decoration: none; }
+  header.navbar .refine {
+    background-color: #eee;
+    z-index: 10;
+    position: absolute;
+    width: 100%;
+    max-width: 700px;
+    padding: 10px;
+    border: 2px solid #aaa;
+    border-top: none;
+    top: 58px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px; }
+    header.navbar .refine input {
+      margin-top: 5px;
+      margin-bottom: 10px; }
+    header.navbar .refine input[type=text] {
+      border-radius: 5px; }
+    header.navbar .refine input[type=checkbox] {
+      -webkit-appearance: checkbox; }
+    header.navbar .refine .cb-label {
+      font-size: 90%; }
+  @media screen and (max-width: 640px) {
+    header.navbar {
+      height: auto;
+      padding: 5px; }
+      header.navbar .tinylogo {
+        float: none;
+        margin: 0px auto;
+        width: 96px;
+        height: 30px;
+        background-size: Auto 30px; }
+      header.navbar .search-button {
+        display: none; }
+      header.navbar .query-text {
+        text-align: center; }
+      header.navbar .refine {
+        position: initial;
+        padding: 0;
+        padding-top: 10px;
+        border: none; }
+      header.navbar .refine-button {
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px; } }
 
-@media screen and (max-width: 640px) {
-  header.navbar {
-    height: auto;
-    padding: 5px; }
-    header.navbar .tinylogo {
-      float: none;
-      margin: 0px auto;
-      width: 96px;
-      height: 30px;
-      background-size: Auto 30px; }
-    header.navbar .search-button {
-      display: none; }
-    header.navbar .query-text {
-      text-align: center;
-      border-radius: 5px; } }
 /*************
  * Home Page *
  *************/
@@ -215,6 +274,12 @@ header.navbar {
     background-color: #64ac6d; }
     .season-tag.season-Summer:before {
       background-position: 1px -48px; }
+  .season-tag.season-Unoffered {
+    border: 1px solid #888;
+    background-color: #888;
+    padding-left: 6px; }
+    .season-tag.season-Unoffered:before {
+      background: none; }
   .season-tag:before {
     position: absolute;
     top: 0px;
@@ -322,3 +387,17 @@ footer.nav-footer {
 
 .collapsed {
   display: none; }
+
+/**********
+ * Refine *
+ **********/
+.refine-item {
+  padding: 0px 10px; }
+  .refine-item input[type=text] {
+    display: block;
+    width: 100%;
+    border: 0px;
+    border-bottom: 2px solid #ddd; }
+  .refine-item input[type=checkbox]:checked + label {
+    opacity: 1;
+    filter: alpha(opacity=100); }

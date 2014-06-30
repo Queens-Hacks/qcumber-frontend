@@ -1,29 +1,4 @@
 (function() {
-  var indexOf = function(arr, x) {
-    var l = arr.length;
-    for (var i=0; i < l; i++) {
-      if (arr[i] === x) return i;
-    }
-
-    return -1;
-  }
-
-  var forEach = function(arr, cb) {
-    var l = arr.length;
-    for (var i=0; i < l; i++) {
-      cb(arr[i], i);
-    }
-  }
-
-  var map = function(arr, cb) {
-    var l = arr.length;
-    var narr = Array(l);
-    for (var i=0; i < l; i++) {
-      narr[i] = cb(arr[i], i);
-    }
-    return narr;
-  }
-
   function toggle(tgt) {
     var tgtSel = tgt.getAttribute('data-collapse-trigger');
     var targets = document.querySelectorAll(tgtSel);
