@@ -3,18 +3,24 @@
 {% block title %}{{ course.subject }} {{ course.number }} - Qcumber{% endblock %}
 
 {% block contents %}
+<!-- COURSE GRADING CAREER UNITS -->
 <small class="extra-course-info">{{ course.grading_basis }}, {{ course.career }}, {{ course.units }} units.</small>
+
+<!-- COURSE NAME -->
 <h2 class="course-name">
   <a href="{{ url_for('subject', subject=course.subject) }}">{{ course.subject }}</a> {{ course.number }}
   <small>{{ course.title }}</small>
 </h2>
 
+<!-- DESCRIPTION -->
 <h4>Description</h4>
 <p>{{ course.description | default('No course description on SOLUS', True) | nl2br }}</p>
 
+<!-- REQUIREMENTS -->
 <h4>Enrollment Requirements</h4>
 <p>{{ course.enrollment_requirement | default('No enrollment requirements listed on SOLUS', True) | nl2br }}</p>
 
+<!-- TEXTBOOKS -->
 {% if textbooks %}
 <h4 data-collapse-trigger="#textbooks"
     data-collapse-html="Textbooks <small>Click to show/hide textbooks</small>"
@@ -44,8 +50,8 @@
 <h4>Textbooks <small>We didn't find any for this course at <a href="http://campusbookstore.com/" target="_blank">The Campus Bookstore</a></small></h4>
 {% endif %}
 
+<!-- SECTIONS -->
 <h4>Sections</h4>
-
 {% for term, sections in terms %}
 <div class="term">
   <h4 data-collapse-trigger="#{{ term | slugify }}"

@@ -198,6 +198,7 @@ def subject(subject):
         return redirect(url_for('search', q=subject_query))
 
     return results_page(subject_query,
+            short_title='{abbreviation}'.format(**sub['_source']),
             title='{abbreviation} - {title}'.format(**sub['_source']),
             force_all=True)
 
@@ -233,7 +234,7 @@ def search():
     return results_page(query)
 
 
-def results_page(query, title=None, force_all=False):
+def results_page(query, short_title=None, title=None, force_all=False):
     """
     Performs a Query String Query on the course doctype, and displays the results
     With title, the results can be given a title. By default, only returns 100 results,
@@ -259,7 +260,7 @@ def results_page(query, title=None, force_all=False):
 
     reses = group_courses([x['_source'] for x in results])
 
-    return render_template('search.html', title=title, query=query, careers=reses)
+    return render_template('search.html', short_title=short_title, title=title, query=query, careers=reses)
 
 ###############
 # STATIC URLS #

@@ -385,6 +385,12 @@ h4 {
   h4 small {
     font-weight: normal; }
 
+h3.pagetitle {
+  color: #999;
+  text-align: right;
+  margin: 10px 10px -15px 10px;
+  font-size: 95%; }
+
 p {
   margin-left: 5px;
   margin-right: 5px; }

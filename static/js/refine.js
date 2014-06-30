@@ -94,15 +94,15 @@
   // I can't think of a much better solution without writing a complex parser,
   // maintaining hidden state, or 
   var uninjectRe = RegExp('(?:(?: |^)subject: ?((?:[^ ]|\\\\ )*))?' +
-                          '(?: number: ?((?:[^ ]|\\\\ )*))?' +
-                          '(?: units: ?((?:[^ ]|\\\\ )*))?' +
-                          '(?: \\(?' +
+                          '(?:(?: |^)number: ?((?:[^ ]|\\\\ )*))?' +
+                          '(?:(?: |^)units: ?((?:[^ ]|\\\\ )*))?' +
+                          '(?:(?: |^)\\(?' +
                                  '(?:seasons: ?(Fall)(?: OR )?)?' +
                                  '(?:seasons: ?(Winter)(?: OR )?)?' +
                                  '(?:seasons: ?(Summer)(?: OR )?)?' +
                                  '(?:(_missing_): ?seasons(?: OR )?)?' +
                           '\\)?)?'+
-                          '(?: \\(?' +
+                          '(?:(?: |^)\\(?' +
                                  '(?:career: ?(Undergraduate)(?: OR )?)?' +
                                  '(?:career: ?(Graduate)(?: OR )?)?' +
                                  '(?:career: ?(Distance\\\\ Studies)(?: OR )?)?' +

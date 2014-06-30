@@ -1,6 +1,6 @@
 {% extends "tmpl.html" %}
 
-{% block title %}{{ query }} - Qcumber Search{% endblock %}
+{% block title %}{% if short_title %}{{ short_title }}{% else %}{{ query }}{% endif %} - Qcumber{% endblock %}
 
 {% block contents %}
 
