@@ -124,9 +124,16 @@ header.navbar {
       margin-top: 5px;
       margin-bottom: 10px; }
     header.navbar .refine input[type=text] {
+      display: block;
+      width: 100%;
+      border: 0px;
+      border-bottom: 2px solid #ddd;
       border-radius: 5px; }
     header.navbar .refine input[type=checkbox] {
       -webkit-appearance: checkbox; }
+    header.navbar .refine input[type=checkbox]:checked + label {
+      opacity: 1;
+      filter: alpha(opacity=100); }
     header.navbar .refine .cb-label {
       font-size: 90%; }
   @media screen and (max-width: 640px) {
@@ -245,17 +252,16 @@ header.navbar {
       text-align: right; }
 
 .season-tag {
-  font-family: 'Droid Sans', sans-serif;
   opacity: 0.6;
   filter: alpha(opacity=60);
   position: relative;
   display: inline-block;
   padding: 0 6px 0 20px;
-  height: 14px;
-  line-height: 15px;
+  height: 15px;
+  line-height: 14px;
   font-size: 9px;
   vertical-align: middle;
-  font-weight: bolc;
+  font-weight: bold;
   text-transform: uppercase;
   color: #fff;
   border-radius: 5px; }
@@ -344,27 +350,26 @@ h2.course-name {
     padding: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    margin: 0px;
-    margin-top: 5px; }
-    .section-list .section table {
-      width: 100%; }
-    .section-list .section td:first-child {
+    margin: 5px 0 0; }
+  .section-list header {
+    font-weight: bold; }
+    .section-list header small {
+      font-weight: normal; }
+  .section-list table {
+    width: 100%; }
+    .section-list table td:first-child {
       width: 33%; }
-    .section-list .section .instructors ul {
+    .section-list table .instructors ul {
       margin: 0px;
       padding: 0px; }
-    .section-list .section .instructors li {
+    .section-list table .instructors li {
       display: inline; }
-      .section-list .section .instructors li:before {
+      .section-list table .instructors li:before {
         content: ', '; }
-      .section-list .section .instructors li:first-child:before {
+      .section-list table .instructors li:first-child:before {
         content: ''; }
-    .section-list .section .location {
+    .section-list table .location {
       text-align: right; }
-    .section-list .section header {
-      font-weight: bold; }
-      .section-list .section header small {
-        font-weight: normal; }
 
 /*****************
  * Page headings *
@@ -387,17 +392,3 @@ footer.nav-footer {
 
 .collapsed {
   display: none; }
-
-/**********
- * Refine *
- **********/
-.refine-item {
-  padding: 0px 10px; }
-  .refine-item input[type=text] {
-    display: block;
-    width: 100%;
-    border: 0px;
-    border-bottom: 2px solid #ddd; }
-  .refine-item input[type=checkbox]:checked + label {
-    opacity: 1;
-    filter: alpha(opacity=100); }

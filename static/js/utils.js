@@ -5,14 +5,14 @@ var indexOf = function(arr, x) {
   }
 
   return -1;
-}
+};
 
 var forEach = function(arr, cb) {
   var l = arr.length;
   for (var i=0; i < l; i++) {
     cb(arr[i], i);
   }
-}
+};
 
 var map = function(arr, cb) {
   var l = arr.length;
@@ -21,7 +21,7 @@ var map = function(arr, cb) {
     narr[i] = cb(arr[i], i);
   }
   return narr;
-}
+};
 
 var mapIf = function(arr, cb) {
   var l = arr.length;
@@ -32,7 +32,7 @@ var mapIf = function(arr, cb) {
   }
 
   return narr;
-}
+};
 
 var sum = function(arr) {
   var l = arr.length;
@@ -40,4 +40,5 @@ var sum = function(arr) {
   for (var i=0; i < l; i++)
     s += arr[i];
   return s;
-}
+};
+

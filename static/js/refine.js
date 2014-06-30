@@ -23,7 +23,10 @@
 
   var injected = true;
 
-  // The inject function fills the query based on the 
+  // The inject function reads in the elements in the refine pane, and then
+  // modifies the query such that it contains those restraints. It is possible
+  // to create queries in the query pane which will cause the refine pane to
+  // act incorrectly, but I can't easily fix that.
   function inject() {
     // Prevent inject from being called multiple times without ininjecting
     if (injected) return;
@@ -86,7 +89,7 @@
   // This regexp is extremely fragile, and will easily break. Unfortunate, but
   // I can't think of a much better solution without writing a complex parser,
   // maintaining hidden state, or 
-  var uninjectRe = RegExp('(?: subject:((?:[^ ]|\\\\ )*))?' +
+  var uninjectRe = RegExp('(?:(?: |^)subject:((?:[^ ]|\\\\ )*))?' +
                           '(?: number:((?:[^ ]|\\\\ )*))?' +
                           '(?: units:((?:[^ ]|\\\\ )*))?' +
                           '(?: \\(?' +
@@ -148,6 +151,7 @@
     }
   }
 
+  // We inject/uninject when someone toggles the refine pane, and when the search form is submitted.
   var refineBtn = document.querySelector('button[class=refine-button]');
   refineBtn.addEventListener('click', function() {
     if (injected) uninject(); else inject();
@@ -155,3 +159,4 @@
   var searchForm = document.getElementById('search-form');
   searchForm.addEventListener('submit', function() { inject(); });
 })();
+

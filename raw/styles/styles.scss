@@ -156,6 +156,10 @@ header.navbar {
     }
 
     input[type=text] {
+      display: block;
+      width: 100%;
+      border: 0px;
+      border-bottom: 2px solid #ddd;
       border-radius: 5px;
     }
 
@@ -163,9 +167,15 @@ header.navbar {
       -webkit-appearance: checkbox;
     }
 
+    input[type=checkbox]:checked + label {
+      opacity: 1;
+      filter: alpha(opacity=100)
+    }
+
     .cb-label {
       font-size: 90%;
     }
+
   }
 
   @media screen and (max-width: 640px) {
@@ -347,18 +357,18 @@ header.navbar {
 }
 
 .season-tag {
-  font-family: 'Droid Sans', sans-serif;
+  // By default they are semitransparent
   opacity: 0.6;
   filter: alpha(opacity=60);
 
   position: relative;
   display: inline-block;
   padding: 0 6px 0 20px;
-  height: 14px;
-  line-height: 15px;
+  height: 15px;
+  line-height: 14px;
   font-size: 9px;
   vertical-align: middle;
-  font-weight: bolc;
+  font-weight: bold;
   text-transform: uppercase;
   color: #fff;
   border-radius: 5px;
@@ -462,7 +472,6 @@ h2.course-name {
 
 .term {
   border: 1px solid #ddd;
-  // background-color: #eee;
   border-radius: 5px;
   padding: 10px;
   margin-top: 10px;
@@ -483,24 +492,26 @@ h2.course-name {
     padding: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    margin: 0px;
-    margin-top: 5px;
+    margin: 5px 0 0
+  }
 
-    table {
-      width: 100%;
+
+  header {
+    font-weight: bold;
+
+    small {
+      font-weight: normal;
     }
+  }
+  
+  table {
+    width: 100%;
 
     td:first-child {
       width: 33%;
     }
     
-    td:nth-child(2) {
-      // min-width:20%;
-    }
-
-    td:last-child {
-    }
-
+    // Make the instructors list appear like a comma-seperated list
     .instructors {
       ul {
         margin: 0px;
@@ -520,15 +531,9 @@ h2.course-name {
       }
     }
 
+    // The location should be right-aligned
     .location {
       text-align: right;
-    }
-
-    header {
-      font-weight: bold;
-      small {
-        font-weight: normal;
-      }
     }
   }
 }
@@ -564,24 +569,3 @@ footer.nav-footer {
   display: none;
 }
 
-/**********
- * Refine *
- **********/
-.refine {
-}
-
-.refine-item {
-  padding: 0px 10px;
-
-  input[type=text] {
-    display: block;
-    width: 100%;
-    border: 0px;
-    border-bottom: 2px solid #ddd;
-  }
-
-  input[type=checkbox]:checked + label {
-    opacity: 1;
-    filter: alpha(opacity=100)
-  }
-}

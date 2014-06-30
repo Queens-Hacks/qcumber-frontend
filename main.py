@@ -137,7 +137,7 @@ def subject(subject):
     return render_template('subject.html',
             subject=sub['_source'],
             careers=careers,
-            query=sub['_source']['abbreviation'])
+            query='subject:{}'.format(sub['_source']['abbreviation']))
 
 @app.route('/catalog/<subject>/<course>')
 def course(subject, course):
@@ -197,7 +197,7 @@ def course(subject, course):
             course=course['_source'],
             terms=sorted_terms,
             textbooks=tbooks,
-            query='{} {}'.format(sub['_source']['abbreviation'], course['_source']['number']))
+            query='subject:{} number:{}'.format(sub['_source']['abbreviation'], course['_source']['number']))
 
 subjectre = re.compile(r'^([A-Za-z]{2,4})$')
 coursere = re.compile(r'^([A-Za-z]{2,4}) ([A-Za-z0-9]{2,4})$')
