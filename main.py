@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, abort, redirect, url_for, request, Markup, escape
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import RequestError, NotFoundError
 from datetime import datetime
 import dateutil.parser
 import re
@@ -11,10 +12,6 @@ BIGNUM=10000 # The maximum number of things which you query for
 es = Elasticsearch() # TODO: Set port & shit
 
 app = Flask(__name__)
-app.config.update(
-    DEBUG=True,
-    PROPAGATE_EXCEPTIONS=True
-)
 
 def term_ordering(term):
     year, season_name = term.split()
@@ -40,6 +37,12 @@ def group_courses(courses):
         grouped[course['career']] = old
 
     return reversed(sorted(grouped.iteritems(), key=lambda x: x[0]))
+
+def escape_query_segment(segment):
+    """
+    Transform a query segment such that it is safe to include in a query
+    """
+    return segment.replace(' ', '\\ ')
 
 @app.template_filter('nl2br')
 def nl2br(string):
@@ -101,57 +104,38 @@ def fancy_section_type(section):
 def index():
     # Get all of the subjects
     res = es.search(index='qcumber', doc_type='subject', body={
+        'sort': [
+            { 'abbreviation': { 'order': 'asc' } }
+        ],
         'query': {
             'match_all': {}
         }
-    }, _source=True, size=BIGNUM)
-
-    hits = res['hits']['hits']
+    }, _source=True, size=BIGNUM)['hits']['hits']
 
     letters = [{'letter': x} for x in "abcdefghijklmnopqrstuvwxyz"]
     for letter in letters:
-        subjects = [i['_source'] for i in hits if i['_source']['abbreviation'][0].lower() == letter['letter']]
-        letter['subjects'] = sorted(subjects, key=lambda x: x['abbreviation'])
+        subjects = [i['_source'] for i in res if i['_source']['abbreviation'][0].lower() == letter['letter']]
+        letter['subjects'] = subjects
 
     return render_template('index.html', letters=letters)
 
-@app.route('/catalog/<subject>')
-def subject(subject):
-    subject = subject.upper()
-
-    sub = es.get(index='qcumber', doc_type='subject', id=subject)
-    if not sub['found']:
-        abort(404)
-
-    res = es.search(index='qcumber', doc_type='course', body={
-        'query': {
-            'match': {
-                'subject': sub['_source']['abbreviation']
-            }
-        }
-    }, _source=True, size=BIGNUM)['hits']['hits']
-
-    courses = sorted([x['_source'] for x in res], key=lambda x: x['number'])
-    careers = group_courses(courses)
-
-    return render_template('subject.html',
-            subject=sub['_source'],
-            careers=careers,
-            query='subject:{}'.format(sub['_source']['abbreviation']))
 
 @app.route('/catalog/<subject>/<course>')
 def course(subject, course):
     subject = subject.upper()
     course = course.upper()
 
+    course_query = 'subject: {} number: {}'.format(subject, course)
     # Get the subject
-    sub = es.get(index='qcumber', doc_type='subject', id=subject)
-    if not sub['found']:
-        abort(404)
+    try:
+        sub = es.get(index='qcumber', doc_type='subject', id=subject)
+    except NotFoundError:
+        return abort(404)
 
     # Get the course
-    course = es.get(index='qcumber', doc_type='course', id=sub['_source']['abbreviation'] + ' ' + course)
-    if not course['found']:
+    try:
+        course = es.get(index='qcumber', doc_type='course', id=sub['_source']['abbreviation'] + ' ' + course)
+    except NotFoundError:
         return abort(404)
 
     # Get the textbooks
@@ -197,49 +181,85 @@ def course(subject, course):
             course=course['_source'],
             terms=sorted_terms,
             textbooks=tbooks,
-            query='subject:{} number:{}'.format(sub['_source']['abbreviation'], course['_source']['number']))
+            query='subject: {} number: {}'.format(sub['_source']['abbreviation'], course['_source']['number']))
 
-subjectre = re.compile(r'^([A-Za-z]{2,4})$')
-coursere = re.compile(r'^([A-Za-z]{2,4}) ([A-Za-z0-9]{2,4})$')
+
+@app.route('/catalog/<subject>')
+def subject(subject):
+    if subject != subject.upper():
+        return redirect(url_for('subject', subject=subject.upper()))
+
+    subject = subject.strip()
+    subject_query = 'subject: {}'.format(escape_query_segment(subject))
+
+    try:
+        sub = es.get(index='qcumber', doc_type='subject', id=subject)
+    except NotFoundError:
+        return redirect(url_for('search', q=subject_query))
+
+    return results_page(subject_query,
+            title='{abbreviation} - {title}'.format(**sub['_source']),
+            force_all=True)
+
+
+subjectre = re.compile(r'^(?:SUBJECT: ?)?([A-Z]{2,4})$')
+coursere = re.compile(r'^(?:(?:SUBJECT: ?([A-Z]{2,4}) NUMBER: ?([A-Z0-9]{2,4}))|(?:([A-Z]{2,4}) ?([A-Z0-9]{2,4})))$')
 @app.route('/search')
 def search():
     query = request.args.get('q', '')
     if query.strip() == '':
-        return redirect('/')
+        return redirect(url_for('index'))
 
     # Check if there is a course/subject with the exact name
     subject_match = subjectre.match(query.upper())
     if subject_match:
+        s = subject_match.group(1)
         try:
-            subject = es.get(index='qcumber', doc_type='subject', id=query.upper())
-            return redirect('/catalog/{}'.format(subject_match.group(1)))
+            subject = es.get(index='qcumber', doc_type='subject', id='{}'.format(s))
+            return redirect(url_for('subject', subject=s))
         except:
             pass # The course doesn't exist
 
     course_match = coursere.match(query.upper())
     if course_match:
+        s = course_match.group(1) or course_match.group(3)
+        c = course_match.group(2) or course_match.group(4)
         try:
-            course = es.get(index='qcumber', doc_type='course', id=query.upper())
-            return redirect('/catalog/{}/{}'.format(course_match.group(1), course_match.group(2)))
+            course = es.get(index='qcumber', doc_type='course', id='{} {}'.format(s, c))
+            return redirect(url_for('course', subject=s, course=c))
         except:
             pass # The course doesn't exist
 
-    results = es.search(index='qcumber', doc_type='course', body={
-        'sort': [
-            { 'number': { 'order': 'asc' } },
-        ],
-        'query': {
-            'query_string': {
-                'query': query.strip(),
-                'lenient': True,
-                'default_operator': 'AND'
-            }
-        }
-    }, _source=True, size=100)['hits']['hits']
+    return results_page(query)
 
-    reses = [x['_source'] for x in results]
 
-    return render_template('search.html', query=query, courses=reses)
+def results_page(query, title=None, force_all=False):
+    """
+    Performs a Query String Query on the course doctype, and displays the results
+    With title, the results can be given a title. By default, only returns 100 results,
+    but all results can be forced using the force_all parameter
+    """
+    query = query.strip()
+
+    try:
+        results = es.search(index='qcumber', doc_type='course', body={
+            'sort': [
+                { 'number': { 'order': 'asc' } }
+            ],
+            'query': {
+                'query_string': {
+                    'query': query,
+                    'lenient': True,
+                    'default_operator': 'AND',
+                },
+            },
+        }, size=BIGNUM if force_all else 100)['hits']['hits']
+    except RequestError:
+        return render_template('error.html', query=query, error='Parse error while processing query: "{}"'.format(query))
+
+    reses = group_courses([x['_source'] for x in results])
+
+    return render_template('search.html', title=title, query=query, careers=reses)
 
 ###############
 # STATIC URLS #
@@ -260,5 +280,6 @@ def contact(): return render_template('static/contact.html')
 @app.route('/issues')
 def issues(): return render_template('static/issues.html')
 
+# Run the debug server
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run(port=3000, debug=True)

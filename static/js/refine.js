@@ -1,16 +1,16 @@
 (function() {
   var seasonsQuerySegments = {
-    fall: 'seasons:Fall',
-    winter: 'seasons:Winter',
-    summer: 'seasons:Summer',
-    unoffered: '_missing_:seasons'
+    fall: 'seasons: Fall',
+    winter: 'seasons: Winter',
+    summer: 'seasons: Summer',
+    unoffered: '_missing_: seasons'
   };
 
   var careersQuerySegments = {
-    undergraduate: 'career:Undergraduate',
-    graduate: 'career:Graduate',
-    distance: 'career:Distance\\ Studies',
-    nonCredit: 'career:Non-Credit'
+    undergraduate: 'career: Undergraduate',
+    graduate: 'career: Graduate',
+    distance: 'career: Distance\\ Studies',
+    nonCredit: 'career: Non-Credit'
   };
 
   function escapeQuerySegment(s) {
@@ -37,15 +37,15 @@
 
     var subject = document.getElementById('refine-subject').value.trim();
     if (subject)
-      query += ' subject:'+escapeQuerySegment(subject);
+      query += ' subject: '+escapeQuerySegment(subject);
 
     var course = document.getElementById('refine-course').value.trim();
     if (course)
-      query += ' number:'+escapeQuerySegment(course);
+      query += ' number: '+escapeQuerySegment(course);
 
     var units = document.getElementById('refine-units').value.trim();
     if (units)
-      query += ' units:'+escapeQuerySegment(units);
+      query += ' units: '+escapeQuerySegment(units);
 
     var seasons = {
       fall: document.getElementById('refine-fall').checked,
@@ -93,20 +93,20 @@
   // This regexp is extremely fragile, and will easily break. Unfortunate, but
   // I can't think of a much better solution without writing a complex parser,
   // maintaining hidden state, or 
-  var uninjectRe = RegExp('(?:(?: |^)subject:((?:[^ ]|\\\\ )*))?' +
-                          '(?: number:((?:[^ ]|\\\\ )*))?' +
-                          '(?: units:((?:[^ ]|\\\\ )*))?' +
+  var uninjectRe = RegExp('(?:(?: |^)subject: ?((?:[^ ]|\\\\ )*))?' +
+                          '(?: number: ?((?:[^ ]|\\\\ )*))?' +
+                          '(?: units: ?((?:[^ ]|\\\\ )*))?' +
                           '(?: \\(?' +
-                                 '(?:seasons:(Fall)(?: OR )?)?' +
-                                 '(?:seasons:(Winter)(?: OR )?)?' +
-                                 '(?:seasons:(Summer)(?: OR )?)?' +
-                                 '(?:(_missing_):seasons(?: OR )?)?' +
+                                 '(?:seasons: ?(Fall)(?: OR )?)?' +
+                                 '(?:seasons: ?(Winter)(?: OR )?)?' +
+                                 '(?:seasons: ?(Summer)(?: OR )?)?' +
+                                 '(?:(_missing_): ?seasons(?: OR )?)?' +
                           '\\)?)?'+
                           '(?: \\(?' +
-                                 '(?:career:(Undergraduate)(?: OR )?)?' +
-                                 '(?:career:(Graduate)(?: OR )?)?' +
-                                 '(?:career:(Distance\\\\ Studies)(?: OR )?)?' +
-                                 '(?:career:(Non-Credit))?' +
+                                 '(?:career: ?(Undergraduate)(?: OR )?)?' +
+                                 '(?:career: ?(Graduate)(?: OR )?)?' +
+                                 '(?:career: ?(Distance\\\\ Studies)(?: OR )?)?' +
+                                 '(?:career: ?(Non-Credit))?' +
                           '\\)?)?$');
 
   // Read in the query string, using the above RegExp to try and find relevant fields.

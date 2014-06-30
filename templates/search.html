@@ -4,12 +4,13 @@
 
 {% block contents %}
 
-<h3 class="pagetitle">Results</h3>
+{% if title %}<h3 class="pagetitle">{{ title }}</h3>{% endif %}
 
-{% if courses %}
+{% for career, courses in careers %}
+  <h4>{{ career }}</h4>
   {% include "components/course_listing.html" %}
 {% else %}
-  <p>Your search for {{ query }} turned up no results. Sorry!</p>
-{% endif %}
+  <p>Your search for "{{ query }}" turned up no results. Sorry!</p>
+{% endfor %}
 
 {% endblock %}
