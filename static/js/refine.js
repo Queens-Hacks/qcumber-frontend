@@ -82,7 +82,11 @@
       query += ' (' + careerQueries.join(' OR ') + ')';
 
     // Write out the query segment to the query string
-    document.getElementById('query').value += query;
+    var queryElement = document.getElementById('query');
+    if (queryElement.value.length > 0)
+      queryElement.value += query;
+    else if (query.length > 0)
+      queryElement.value += query.substring(1); // Strip the leading space
   }
 
   // Yup. I'm using a regexp to parse a context-free language. I'm a bad person.
