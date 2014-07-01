@@ -33,6 +33,9 @@ def is_current(section):
 ####################
 # Import Functions #
 ####################
+def clean(es):
+    es.indices.delete(index=ES_INDEX)
+
 def courses(es):
     courses = os.listdir(os.path.join('out', 'courses'))
     for course in courses:
@@ -40,6 +43,9 @@ def courses(es):
             coursedata = json.loads(f.read())
             cd = coursedata['basic']
             cd.update(coursedata['extra'])
+
+            # Units should be registered as a number
+            cd['units'] = float(cd['units'])
 
             print('Registering Course: {subject} {number}'.format(**cd))
 
@@ -126,11 +132,12 @@ def main() :
     # Connect to the Elasticsearch instance
     es = Elasticsearch()
 
-    # courses(es)
+    clean(es)
+    courses(es)
     sections(es)
-    # subjects(es)
-    # textbooks(es)
-    # denormalized_courses(es)
+    subjects(es)
+    textbooks(es)
+    denormalized_courses(es)
 
 if __name__ == '__main__':
     main()
