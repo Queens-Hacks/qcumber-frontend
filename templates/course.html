@@ -60,7 +60,7 @@
   </h4>
   <ul id="{{ term | slugify }}" class="section-list">
     {% for section in sections %}
-    <li class="section">
+    <li class="section" data-id="{{ section._id }}">
       <header>{{ section.type | fancy_section_type }} <small>({{ section.class_num }})</small></header>
       <table>
         {% for class in section.classes %}

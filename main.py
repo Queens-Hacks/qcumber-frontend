@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask, render_template, abort, redirect, url_for, request, Markup, escape
+from flask import Flask, render_template, abort, redirect, url_for, request, Markup, escape, jsonify
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import RequestError, NotFoundError
 from datetime import datetime
@@ -167,6 +167,8 @@ def course(subject, course):
 
     terms = {}
     for section in sects:
+        section['_source']['_id'] = section['_id'] # Record the _id
+
         old = terms.get('{year} {season}'.format(**(section['_source'])), [])
         old.append(section['_source'])
         terms['{year} {season}'.format(**(section['_source']))] = old
@@ -265,6 +267,17 @@ def results_page(query, short_title=None, title=None, force_all=False):
 ###############
 # STATIC URLS #
 ###############
+
+@app.route('/timetable')
+def timetable(): return render_template('timetable.html')
+
+@app.route('/timetable/section/<section_id>')
+def sectionJSON(section_id):
+    try:
+        section_data = es.get(index='qcumber', doc_type='section', id=section_id)['_source']
+    except NotFoundError:
+        return abort(404, 'There is no such section')
+    return jsonify(section_data)
 
 @app.route('/faq')
 def faq(): return render_template('static/faq.html')

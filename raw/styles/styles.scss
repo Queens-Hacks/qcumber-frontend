@@ -41,6 +41,7 @@ a {
 }
 
 .contents {
+  overflow: scroll;
   max-width: $max-page-width;
   width: 100%;
   margin: 0px auto;
@@ -537,6 +538,76 @@ h2.course-name {
     // The location should be right-aligned
     .location {
       text-align: right;
+    }
+  }
+}
+
+/*************
+ * Timetable *
+ *************/
+.timetable-add {
+  font-size: 50%;
+  float: right;
+}
+
+.timetable-wrapper {
+  width: 700px;
+  margin: 0px auto;
+  padding: 0px;
+
+  .times {
+    float: left;
+    width: 30px;
+
+    .time {
+      height: 30px;
+      padding-top: 5px;
+      padding-right: 5px;
+      margin-bottom: 30px;
+      font-size: 20px;
+      text-align: right;
+    }
+  }
+  
+  .day {
+    float: left;
+    width: 134px;
+  }
+
+  .day-label {
+    font-size: 100%;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .day-sections {
+    position: relative;
+    border: 1px solid #fff;
+    height: 60px * 15;
+    background-image: url('../images/timetable-rows.png');
+  }
+
+  .section {
+    display: block;
+    position: absolute;
+    background-color: #fff;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 5px;
+    padding: 5px;
+    overflow: hidden;
+    box-shadow: inset 0 -2px darken(#fff, 30%);
+
+    h3 {
+      margin: 0;
+      font-size: 100%;
+      text-align: center;
+    }
+    
+    p {
+      margin: 10px 0;
+      font-size: 70%;
+      text-align: center;
     }
   }
 }

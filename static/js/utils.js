@@ -42,3 +42,26 @@ var sum = function(arr) {
   return s;
 };
 
+var all = function(arr, cb) {
+  var l = arr.length;
+  for (var i=0; i < l; i++)
+    if (!cb(arr[i], i)) return false;
+  return true;
+};
+
+var entityMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+  '/': '&#x2F'
+};
+
+var escapeHTML = function(s) {
+  return String(s).replace(/[&<>"'\/]/g, function(s) {
+    return entityMap[s];
+  });
+}
+
+
