@@ -12,9 +12,9 @@
     });
   }
 
-  function handle() {
+  function registerCollapsers(parent) {
     // This function handles 
-    var collapsers = document.querySelectorAll('[data-collapse-trigger]');
+    var collapsers = parent.querySelectorAll('[data-collapse-trigger]');
     forEach(collapsers, function(trigger) {
       // Change the HTML content if collapse is avaliable
       if (trigger.hasAttribute('data-collapse-html'))
@@ -32,5 +32,7 @@
     });
   }
 
-  handle();
+  registerCollapsers(document);
+
+  window.registerCollapsers = registerCollapsers;
 })();

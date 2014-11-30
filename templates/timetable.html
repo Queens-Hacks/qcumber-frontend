@@ -3,7 +3,7 @@
 {% block title %}Timetable - Qcumber{% endblock %}
 
 {% block contents %}
-<div class="timetable-wrapper">
+<!-- <div class="timetable-wrapper">
   <div class="times">
     <h2 class="day-label">&nbsp;</h2>
     {% for i in range(15) %}
@@ -16,7 +16,7 @@
     <div class="day-sections" id="day-{{ (i + 1) }}"></div>
   </div>
   {% endfor %}
-</div>
+</div> -->
 {% endblock %}
 
 {% block morejs %}<script src="{{ url_for('static', filename='js/timetable.js') }}"></script>{% endblock %}

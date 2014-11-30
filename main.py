@@ -7,13 +7,17 @@ from datetime import datetime
 import dateutil.parser
 import re
 
-BIGNUM=10000 # The maximum number of things which you query for
+BIGNUM = 10000 # The maximum number of things which you query for
 
 es = Elasticsearch() # TODO: Set port & shit
 
+# pylint : C0103
 app = Flask(__name__)
 
 def term_ordering(term):
+    """
+    Generates the order for a given term
+    """
     year, season_name = term.split()
     if season_name == 'Winter':
         season = 0
@@ -46,6 +50,10 @@ def escape_query_segment(segment):
 
 @app.template_filter('nl2br')
 def nl2br(string):
+    """
+    Convert newlines into <br> tags, and produce HTML.
+    Also escapes all of the text passed in
+    """
     return Markup('<br>'.join([escape(x) for x in string.split('\n')]))
 
 @app.template_filter('slugify')
@@ -179,11 +187,12 @@ def course(subject, course):
     # sections = [x['_source'] for x in sects]
 
     return render_template('course.html',
-            subject=sub['_source'],
-            course=course['_source'],
-            terms=sorted_terms,
-            textbooks=tbooks,
-            query='subject: {} number: {}'.format(sub['_source']['abbreviation'], course['_source']['number']))
+                           subject=sub['_source'],
+                           course=course['_source'],
+                           terms=sorted_terms,
+                           textbooks=tbooks,
+                           query='subject: {} number: {}'.format(
+                               sub['_source']['abbreviation'], course['_source']['number']))
 
 
 @app.route('/catalog/<subject>')
@@ -205,8 +214,8 @@ def subject(subject):
             force_all=True)
 
 
-subjectre = re.compile(r'^(?:SUBJECT: ?)?([A-Z]{2,4})$')
-coursere = re.compile(r'^(?:(?:SUBJECT: ?([A-Z]{2,4}) NUMBER: ?([A-Z0-9]{2,4}))|(?:([A-Z]{2,4}) ?([A-Z0-9]{2,4})))$')
+SUBJECT_RE = re.compile(r'^(?:SUBJECT: ?)?([A-Z]{2,4})$')
+COURSE_RE = re.compile(r'^(?:(?:SUBJECT: ?([A-Z]{2,4}) NUMBER: ?([A-Z0-9]{2,4}))|(?:([A-Z]{2,4}) ?([A-Z0-9]{2,4})))$')
 @app.route('/search')
 def search():
     query = request.args.get('q', '')
@@ -214,7 +223,7 @@ def search():
         return redirect(url_for('index'))
 
     # Check if there is a course/subject with the exact name
-    subject_match = subjectre.match(query.upper())
+    subject_match = SUBJECT_RE.match(query.upper())
     if subject_match:
         s = subject_match.group(1)
         try:
@@ -223,7 +232,7 @@ def search():
         except:
             pass # The course doesn't exist
 
-    course_match = coursere.match(query.upper())
+    course_match = COURSE_RE.match(query.upper())
     if course_match:
         s = course_match.group(1) or course_match.group(3)
         c = course_match.group(2) or course_match.group(4)
@@ -247,7 +256,7 @@ def results_page(query, short_title=None, title=None, force_all=False):
     try:
         results = es.search(index='qcumber', doc_type='course', body={
             'sort': [
-                { 'number': { 'order': 'asc' } }
+                {'number': {'order': 'asc'}}
             ],
             'query': {
                 'query_string': {
@@ -258,11 +267,17 @@ def results_page(query, short_title=None, title=None, force_all=False):
             },
         }, size=BIGNUM if force_all else 100)['hits']['hits']
     except RequestError:
-        return render_template('error.html', query=query, error='Parse error while processing query: "{}"'.format(query))
+        return render_template('error.html',
+                               query=query,
+                               error='Parse error while processing query: "{}"'.format(query))
 
     reses = group_courses([x['_source'] for x in results])
 
-    return render_template('search.html', short_title=short_title, title=title, query=query, careers=reses)
+    return render_template('search.html',
+                           short_title=short_title,
+                           title=title,
+                           query=query,
+                           careers=reses)
 
 ###############
 # STATIC URLS #
@@ -277,6 +292,7 @@ def sectionJSON(section_id):
         section_data = es.get(index='qcumber', doc_type='section', id=section_id)['_source']
     except NotFoundError:
         return abort(404, 'There is no such section')
+
     return jsonify(section_data)
 
 @app.route('/faq')

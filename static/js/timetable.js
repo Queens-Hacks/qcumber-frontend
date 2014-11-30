@@ -95,53 +95,24 @@
       elem.appendChild(element);
     });
   }
-
-  /* var schedule = [
-    {
-      room: 'DUNNING AUD',
-      code: "CISC 121",
-      startHr: 8,
-      startMin: 30,
-      endHr: 9,
-      endMin: 30
-    },
-    {
-      room: 'DUNNING AUD',
-      code: "CISC 226",
-      startHr: 9,
-      startMin: 30,
-      endHr: 10,
-      endMin: 30
-    },
-    {
-      room: 'DUNNING AUD',
-      code: "CISC 345",
-      startHr: 13,
-      startMin: 30,
-      endHr: 15,
-      endMin: 00
-    },
-    {
-      room: 'DUNNING AUD',
-      startHr: 11,
-      startMin: 30,
-      endHr: 14,
-      endMin: 30
-    }
-  ];
-
-  renderSchedule(document.getElementById('day-1'), schedule);
-  renderSchedule(document.getElementById('day-2'), schedule); */
+  
   var unloaded = 0;
-  var days = [
-    [], // Sunday
-    [], // Monday
-    [], // Tuesday
-    [], // Wednesday
-    [], // Thursday
-    [], // Friday
-    []  // Saturday
-  ];
+  var seasons = {};
+  function getDays(season) {
+    if (!seasons[season]) {
+      seasons[season] = [
+        [], // Sunday
+        [], // Monday
+        [], // Tuesday
+        [], // Wednesday
+        [], // Thursday
+        [], // Friday
+        []  // Saturday
+      ];
+    }
+
+    return seasons[season];
+  }
 
   var sections = JSON.parse(localStorage.getItem('timetable-sections') || '[]');
   forEach(sections, function(section) {
@@ -152,39 +123,149 @@
       unloaded--;
       var data = JSON.parse(this.responseText);
       forEach(data.classes, function(aClass) {
-        var startTime = new Date(aClass.start_time);
-        var endTime = new Date(aClass.end_time);
+        try {
+          var startTime = new Date(aClass.start_time);
+          var endTime = new Date(aClass.end_time);
 
-        console.log(startTime);
-        console.log(endTime);
+          console.log(startTime);
+          console.log(endTime);
 
-        days[aClass.day_of_week].push({
-          room: aClass.location,
-          code: data.subject + ' ' + data.course,
-          startHr: startTime.getUTCHours(),
-          startMin: startTime.getUTCMinutes(),
-          endHr: endTime.getUTCHours(),
-          endMin: endTime.getUTCMinutes()
-        });
+          getDays(data.season + ' ' + data.year)[aClass.day_of_week].push({
+            room: aClass.location,
+            code: data.subject + ' ' + data.course,
+            startHr: startTime.getUTCHours(),
+            startMin: startTime.getUTCMinutes(),
+            endHr: endTime.getUTCHours(),
+            endMin: endTime.getUTCMinutes()
+          });
+        } catch (e) { }
       });
-
-      console.log('unloaded: ' + unloaded);
-      console.log(days);
 
       if (unloaded <= 0)
         renderAllSchedules();
     });
+
     xhr.open('get', '/timetable/section/' + encodeURIComponent(section), true);
     xhr.send();
   });
 
 
-  function renderAllSchedules() {
-    for (var i=1; i < 6; i++) { // Skip SATURADY and SUNDAY
-      renderSchedule(document.getElementById('day-' + i), days[i]);
-    }
-  }
-  console.log(sections);
+  function createSeason(season) {
+    var day_sections = [];
 
+    var wrapper = document.createElement('div');
+    wrapper.className = 'timetable-wrapper';
+    wrapper.setAttribute('id', slugify(season));
+
+    var times = document.createElement('div');
+    times.className='times';
+
+    var day_label = document.createElement('h2');
+    day_label.className = 'day-label';
+    day_label.innerHTML = '&nbsp;';
+    times.appendChild(day_label);
+
+    for (var i = 0; i < 15; i++) {
+      var time = document.createElement('div');
+      time.className = 'time';
+      time.textContent = ((i + 6) % 12) + 1;
+
+      times.appendChild(time);
+    }
+
+    wrapper.appendChild(times);
+
+    for (var i = 0; i < 5; i++) {
+      var day = document.createElement('div');
+      day.className = 'day';
+
+      var label = document.createElement('h2');
+      label.className = 'day-label';
+      switch (i) {
+        case 0: label.textContent = 'Monday'; break;
+        case 1: label.textContent = 'Tuesday'; break;
+        case 2: label.textContent = 'Wednesday'; break;
+        case 3: label.textContent = 'Thursday'; break;
+        case 4: label.textContent = 'Friday'; break;
+      }
+      day.appendChild(label);
+
+      var sections = document.createElement('div');
+      sections.className = 'day-sections';
+      day_sections.push(sections);
+      day.appendChild(sections);
+
+      wrapper.appendChild(day);
+    }
+
+    // Add the item
+    var something = document.createElement('div');
+    something.style.clear = 'both';
+
+    var header = document.createElement('h2');
+    header.className = 'timetable-heading';
+
+    var header_link = document.createElement('a');
+    header_link.setAttribute('href', '#');
+    header_link.setAttribute('data-collapse-trigger', '#' + slugify(season));
+
+    if (outdated(season))
+      header_link.setAttribute('data-collapse-default', 'true');
+
+    header_link.textContent = season;
+    header.appendChild(header_link);
+    
+    console.log(header);
+
+    something.appendChild(header);
+    something.appendChild(wrapper);
+
+    var contents = document.querySelector('.contents');
+    contents.appendChild(something);
+
+    return day_sections;
+  }
+
+  function seasonToInt(season) {
+    var parts = season.split(' ');
+    var n = parseInt(parts[1]) * 3;
+
+    if (parts[0] === 'Winter')
+      n += 0;
+    else if (parts[0] === 'Summer')
+      n += 1;
+    else
+      n += 2;
+
+    return n;
+  }
+
+  function outdated(season) {
+    var now = new Date();
+    console.log(now.getFullYear() * 3 + (now.getMonth() % 4));
+    console.log(season, seasonToInt(season));
+    return seasonToInt(season) < now.getFullYear() * 3 + (now.getMonth() % 4);
+  }
+
+
+  function renderAllSchedules() {
+    // Sort the seasons in time ascending order
+    var keys = Object.keys(seasons).sort(function(aStr, bStr) {
+      return seasonToInt(aStr) - seasonToInt(bStr);
+    });
+
+    // Render each of the seasons to the DOM
+    forEach(keys, function(season) {
+      var days = seasons[season];
+      var day_sections = createSeason(season);
+
+      for (var i = 0; i < day_sections.length; i++) {
+        renderSchedule(day_sections[i], days[i+1]);
+      }
+    });
+
+    // Ensure that the collapser callbacks are correctly hooked up
+    registerCollapsers(document.querySelector('.contents'));
+  }
 
 })();

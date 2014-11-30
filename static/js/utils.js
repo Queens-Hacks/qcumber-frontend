@@ -64,4 +64,8 @@ var escapeHTML = function(s) {
   });
 }
 
+var slugify = function(s) {
+  return String(s).toLowerCase().replace(/ /g, '-');
+}
+
 
