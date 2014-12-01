@@ -88,9 +88,10 @@
         // XXX: This is an awful way to go about re-rendering, but it works...
         document.location.reload();
       });
-
+      
       var element = N('div', { 'class': 'section' }, [
         drop_link,
+        N('div', { 'class': 'section-type' }, [ entry.type ]),
         N('h3', {}, [
           entry.link
             ? N('a', { 'href': entry.link }, [ entry.code ]) : entry.code
@@ -153,6 +154,7 @@
 
           var section_data = {
             section: section,
+            type: data.type,
             room: aClass.location,
             code: data.subject + ' ' + data.course,
             link: '/catalog/' + data.subject + '/' + data.course,

@@ -1,7 +1,7 @@
 # pylint: disable=W0142,C0111
 
 import re
-from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, redirect, url_for, request, jsonify, abort
 from elasticsearch.exceptions import NotFoundError, RequestError
 
 # pylint: disable=W0611
@@ -31,10 +31,15 @@ def course_page(subject_id, course_id):
     """
     # TODO: Redirect to uppercase subject_id and course_id
 
-    subject = search.subject(subject_id)
-    course = search.course(subject_id, course_id)
-    textbooks = search.textbooks(subject_id, course_id)
-    sections = search.sections(subject_id, course_id)
+    try:
+        subject = search.subject(subject_id)
+        course = search.course(subject_id, course_id)
+        textbooks = search.textbooks(subject_id, course_id)
+        sections = search.sections(subject_id, course_id)
+    except NotFoundError:
+        return abort(
+            404,
+            'There doesn\'t appear to be a course named {} {}'.format(subject_id, course_id))
 
     terms = {}
     for section in sections:
@@ -66,7 +71,13 @@ def subject_page(subject_id):
     """
     # TODO: Redirect to uppercase subject_id and course_id
 
-    subject = search.subject(subject_id)
+    try:
+        subject = search.subject(subject_id)
+    except NotFoundError:
+        return abort(
+            404,
+            'There doesn\'t appear to be a subject named {}'.format(subject_id))
+
     subject_query = 'subject: {}'.format(subject_id)
 
     return results_page(subject_query,
@@ -150,7 +161,10 @@ def section_json(section_id):
     """
     Return JSON data for the given section
     """
-    section = search.section(section_id)
+    try:
+        section = search.section(section_id)
+    except NotFoundError:
+        return abort(404)
 
     return jsonify(section)
 
@@ -168,3 +182,10 @@ def contact(): return render_template('static/contact.html')
 
 @APP.route('/issues')
 def issues(): return render_template('static/issues.html')
+
+@APP.errorhandler(404)
+def not_found(e):
+    """
+    The 404 error page. Displays an error message to the screen
+    """
+    return render_template('error.html', error=e), 404

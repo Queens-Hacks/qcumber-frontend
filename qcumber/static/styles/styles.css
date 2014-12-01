@@ -475,3 +475,9 @@ input {
   .drop-section:hover {
     color: #FF0000;
     cursor: pointer; }
+
+.section-type {
+  font-size: 7px;
+  position: absolute;
+  top: 5px;
+  left: 5px; }
