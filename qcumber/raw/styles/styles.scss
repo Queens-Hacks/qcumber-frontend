@@ -664,3 +664,16 @@ input {
   font-size: 60%;
   vertical-align: top;
 }
+
+.drop-section {
+  position: absolute;
+  top: 7px;
+  right: 5px;
+  font-size: 20px;
+  line-height: 0px;
+  
+  &:hover {
+    color: #FF0000;
+    cursor: pointer;
+  }
+}

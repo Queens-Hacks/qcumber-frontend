@@ -15,9 +15,9 @@
 
   function conflicting(a, b) {
     var start_a = start(a)
-      , start_b = start(b)
-      , end_a   = end(a)
-      , end_b   = end(b);
+    , start_b = start(b)
+    , end_a   = end(a)
+    , end_b   = end(b);
 
     return ((start_a > start_b && start_a < end_b) ||
             (end_a > start_b && end_a < end_b) ||
@@ -69,14 +69,28 @@
     forEach(processed, function(entry) {
       for (var i = entry.column + 1; i <= maxColumn; i++) {
         if (all(processed, // Check if there are any items conflicting with this column
-            function(item) { return item.column != i || !conflicting(entry, item); })) {
+                function(item) { return item.column != i || !conflicting(entry, item); })) {
           entry.width++; // Expand!
         } else {
           break;
         }
       }
 
+      var drop_link = N('a', { 'class': 'drop-section' }, [ '\u2A2F' /* times */ ]);
+      drop_link.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        // Remove the section from localStorage
+        var sections = JSON.parse(localStorage.getItem('timetable-sections') || '[]');
+        sections = sections.filter(function(section) { return section != entry.section; });
+        localStorage.setItem('timetable-sections', JSON.stringify(sections));
+
+        // XXX: This is an awful way to go about re-rendering, but it works...
+        document.location.reload();
+      });
+
       var element = N('div', { 'class': 'section' }, [
+        drop_link,
         N('h3', {}, [
           entry.link
             ? N('a', { 'href': entry.link }, [ entry.code ]) : entry.code
@@ -132,7 +146,13 @@
           var startTime = new Date(aClass.start_time + 'Z');
           var endTime = new Date(aClass.end_time + 'Z');
 
+          if (isNaN(startTime.getUTCHours()) || isNaN(endTime.getUTCHours())) {
+            // skip this item, it's useless
+            return;
+          }
+
           var section_data = {
+            section: section,
             room: aClass.location,
             code: data.subject + ' ' + data.course,
             link: '/catalog/' + data.subject + '/' + data.course,
@@ -153,7 +173,6 @@
     xhr.open('get', '/timetable/section/' + encodeURIComponent(section), true);
     xhr.send();
   });
-
 
   function createSeason(season) {
     var day_sections = [];
@@ -259,5 +278,4 @@
     // Ensure that the collapser callbacks are correctly hooked up
     registerCollapsers(document.querySelector('.contents'));
   }
-
 })();
