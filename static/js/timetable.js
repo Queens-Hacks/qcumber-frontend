@@ -76,33 +76,13 @@
         }
       }
 
-      // Create the element and add it to the day in question.
-      var element = document.createElement('div');
-      element.className = 'section';
-      if (entry.code) {
-        // Render the code for the item to the screen
-        var course_code_el = document.createElement('h3');
-
-        if (entry.link) {
-          var course_code_link = document.createElement('a');
-          course_code_link.setAttribute('href', entry.link);
-          course_code_link.textContent = entry.code;
-          course_code_el.appendChild(course_code_link);
-        } else {
-          course_code_el.textContent = entry.code;
-        }
-
-        element.appendChild(course_code_el);
-      }
-
-      if (entry.room) {
-        // Render the code for the item to the screen
-        var room_el = document.createElement('p');
-
-        room_el.textContent = entry.room;
-
-        element.appendChild(room_el);
-      }
+      var element = N('div', { 'class': 'section' }, [
+        N('h3', {}, [
+          entry.link
+            ? N('a', { 'href': entry.link }, [ entry.code ]) : entry.code
+        ]),
+        N('p', {}, [ entry.room ])
+      ]);
 
       // Positioning the element
       element.style.top = ((start(entry) - start_time) * day_height / 60) + 'px';
@@ -182,82 +162,53 @@
      * Creating the DOM elements *
      *****************************/
 
-    var wrapper = document.createElement('div');
-    wrapper.className = 'timetable-wrapper';
-    wrapper.setAttribute('id', slugify(season));
-
-    // Times column
-    var times = document.createElement('div');
-    times.className='times';
-
-    // Times has an empty heading
-    var times_heading = document.createElement('h2');
-    times_heading.className = 'day-label';
-    times_heading.innerHTML = '&nbsp;';
-    times.appendChild(times_heading);
+    var times = N('div', { 'class': 'times' }, [
+      N('h2', { 'class': 'day-label' }, ['\u00A0' /* NBSP */])
+    ]);
 
     // Create each of the time slots.
     for (var i = 0; i < 15; i++) { // @TODO: This should not have magic numbers...
-      var time = document.createElement('div');
-      time.className = 'time';
-      time.textContent = ((i + 6) % 12) + 1;
-
-      times.appendChild(time);
+      times.appendChild(N('div', { 'class': 'time' }, [
+        '' + ((i + 6) % 12 + 1)
+      ]));
     }
 
-    // Add the times column
-    wrapper.appendChild(times);
+    var wrapper = N('div', {
+      'class': 'timetable-wrapper',
+      'id': slugify(season)
+    }, [
+      times
+    ]);
 
     // Add each of the day columns
-    for (var i = 0; i < 5; i++) {
-      var day = document.createElement('div');
-      day.className = 'day';
-
-      // Heading
-      var day_heading = document.createElement('h2');
-      day_heading.className = 'day-label';
-      switch (i) {
-        case 0: day_heading.textContent = 'Monday'; break;
-        case 1: day_heading.textContent = 'Tuesday'; break;
-        case 2: day_heading.textContent = 'Wednesday'; break;
-        case 3: day_heading.textContent = 'Thursday'; break;
-        case 4: day_heading.textContent = 'Friday'; break;
-      }
-      day.appendChild(day_heading);
-
-      // Body area for sections
-      var sections = document.createElement('div');
-      sections.className = 'day-sections';
+    forEach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], function(day_name) {
+      var sections = N('div', { 'class': 'day-sections' }, []);
       day_sections.push(sections);
-      day.appendChild(sections);
+
+      var day = N('div', { 'class': 'day' }, [
+        N('h2', { 'class': 'day-label' }, [
+          day_name
+        ]),
+        sections
+      ]);
 
       wrapper.appendChild(day);
-    }
+    });
 
     /**************************************
      * Season label & collapse components *
      **************************************/
 
-    var season_wrapper = document.createElement('div');
-    season_wrapper.style.clear = 'both';
-
-    // Heading for the season
-    var header = document.createElement('h2');
-    header.className = 'timetable-heading';
-
-    var header_link = document.createElement('a');
-    header_link.setAttribute('href', '#');
-    header_link.setAttribute('data-collapse-trigger', '#' + slugify(season));
-
-    if (outdated(season)) // Outdated seasons should be collapsed by default
-      header_link.setAttribute('data-collapse-default', 'true');
-
-    header_link.textContent = season;
-    header.appendChild(header_link);
-
-    // Add the header & main body into the season_wrapper
-    season_wrapper.appendChild(header);
-    season_wrapper.appendChild(wrapper);
+    var season_wrapper = N('div', { 'style': 'clear: both' }, [
+      N('h2', { 'class': 'timetable-heading' }, [
+        N('a', {
+          'href': '#',
+          'data-collapse-trigger': '#' + slugify(season),
+          'data-collapse-default': outdated(season) ? 'true' : undefined
+        }, [ season ])
+      ]),
+      wrapper
+    ]);
 
     // And add the season_wrapper to the DOM
     var contents = document.querySelector('.contents');
@@ -283,9 +234,8 @@
 
   function outdated(season) {
     var now = new Date();
-    return seasonToInt(season) < now.getFullYear() * 3 + (now.getMonth() % 4);
+    return seasonToInt(season) < now.getFullYear() * 3 + ((now.getMonth() / 4) | 0);
   }
-
 
   function renderAllSchedules() {
     // Sort the seasons in time ascending order
