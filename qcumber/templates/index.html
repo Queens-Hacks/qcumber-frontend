@@ -46,7 +46,7 @@
   <ul>
     {% for subject in letter.subjects %}
     <li>
-      <a href="{{ url_for('subject', subject=subject.abbreviation) }}">{{subject.abbreviation}} - {{subject.title}}</a>
+      <a href="{{ url_for('subject_page', subject_id=subject.abbreviation) }}">{{subject.abbreviation}} - {{subject.title}}</a>
     </li>
     {% endfor %}
   </ul>

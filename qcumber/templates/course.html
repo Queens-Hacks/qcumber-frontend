@@ -8,7 +8,7 @@
 
 <!-- COURSE NAME -->
 <h2 class="course-name">
-  <a href="{{ url_for('subject', subject=course.subject) }}">{{ course.subject }}</a> {{ course.number }}
+  <a href="{{ url_for('subject_page', subject_id=course.subject) }}">{{ course.subject }}</a> {{ course.number }}
   <small>{{ course.title }}</small>
 </h2>
 
