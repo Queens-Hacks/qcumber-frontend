@@ -41,7 +41,7 @@ a {
 }
 
 .contents {
-  overflow: scroll;
+  overflow: auto;
   max-width: $max-page-width;
   width: 100%;
   margin: 0px auto;
