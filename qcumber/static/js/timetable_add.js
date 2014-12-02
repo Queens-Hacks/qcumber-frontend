@@ -22,14 +22,16 @@
 
       var i;
       if ((i = indexOf(sections, id)) !== -1) {
-        console.log(i);
+        sections = JSON.parse(localStorage.getItem('timetable-sections') || "[]");
         sections.splice(i, 1);
-        console.log(sections);
+
         localStorage.setItem('timetable-sections', JSON.stringify(sections));
 
         linky.innerHTML = 'Add to Timetable';
       } else {
+        sections = JSON.parse(localStorage.getItem('timetable-sections') || "[]");
         sections.push(id);
+
         localStorage.setItem('timetable-sections', JSON.stringify(sections));
 
         linky.innerHTML = 'Remove from Timetable';
