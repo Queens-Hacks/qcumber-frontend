@@ -227,7 +227,8 @@ header.navbar {
  ************************/
 .course-listing {
   width: 100%;
-  border-collapse: collapse; }
+  border-collapse: collapse;
+  margin-top: 20px; }
   .course-listing tr {
     background-color: #eee;
     border-bottom: 1px solid #ccc; }

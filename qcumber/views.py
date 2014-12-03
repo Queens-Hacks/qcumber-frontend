@@ -141,13 +141,13 @@ def results_page(query, short_title=None, title=None, force_all=False):
                                query=query,
                                error='Parse error while processing query: "{}"'.format(query))
 
-    careers = util.group_by_career(results)
+    groups = util.group_by_course_num(results)
 
     return render_template('search.html',
                            short_title=short_title,
                            title=title,
                            query=query,
-                           careers=careers)
+                           groups=groups)
 
 ###############
 # STATIC URLS #

@@ -13,16 +13,25 @@ def term_ordering(term):
     return int(year) * 3 + season
 
 
-def group_by_career(courses):
+def group_by_course_num(courses):
     """
-    Groups courses based on the career. The groups are sorted in reverse
-    alphabetical order. The return value is an array of pairs, where the
-    first element is the Career, and the second is the courses.
+    Groups courses based on their course number. This is done rather than
+    grouping based on career, as the career values contain options other than
+    graduate/undergraduate, which adds noise and can make it difficult to find
+    the information you are looking for.
     """
-    grouped = {}
-    for course in courses:
-        old = grouped.get(course['career'], [])
-        old.append(course)
-        grouped[course['career']] = old
 
-    return reversed(sorted(grouped.iteritems(), key=lambda x: x[0]))
+    groups = {}
+
+    # Group by keys
+    for course in courses:
+        key = course['number'][0]
+
+        if key in groups:
+            groups[key].append(course)
+        else:
+            groups[key] = [course]
+
+    # Sort by the keys, mostly ascending (P should come before everything else
+    return sorted(groups.iteritems(),
+                  key=lambda x: '0' if x[0] == 'P' else x[0])
