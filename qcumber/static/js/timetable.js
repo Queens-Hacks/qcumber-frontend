@@ -259,6 +259,11 @@
   }
 
   function renderAllSchedules() {
+    var contents_node = document.querySelector('.contents');
+    while (contents_node.hasChildNodes()) {
+      contents_node.removeChild(contents_node.lastChild);
+    }
+
     // Sort the seasons in time ascending order
     var keys = Object.keys(seasons).sort(function(aStr, bStr) {
       return seasonToInt(aStr) - seasonToInt(bStr);
