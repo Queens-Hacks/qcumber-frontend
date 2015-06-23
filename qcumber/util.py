@@ -32,6 +32,9 @@ def group_by_course_num(courses):
         else:
             groups[key] = [course]
 
+    for key in groups:
+        groups[key] = sorted(groups[key], key=lambda c: c['number'])
+
     # Sort by the keys, mostly ascending (P should come before everything else
-    return sorted(groups.iteritems(),
+    return sorted(groups.items(),
                   key=lambda x: '0' if x[0] == 'P' else x[0])

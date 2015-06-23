@@ -2,7 +2,6 @@
 Template Filters used by the Qcumber frontend
 """
 from datetime import datetime
-import dateutil.parser
 from flask import Markup, escape
 from qcumber import APP, util
 
@@ -39,9 +38,8 @@ def format_time(value):
     Format a time for display
     """
     if value:
-        time = dateutil.parser.parse(value)
         # pylint: disable=E1101
-        return time.strftime("%I:%M%p")
+        return value.strftime("%I:%M%p")
     else:
         return ''
 
@@ -65,15 +63,15 @@ def format_dow(value):
     Format an integer day of week into a full-word day of week
     """
     if value:
-        return [
-            'Sunday',
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-        ][value]
+        return {
+            'SUNDAY':   'Sunday',
+            'MONDAY':   'Monday',
+            'TUESDAY':  'Tuesday',
+            'WEDNESDAY':'Wednesday',
+            'THURSDAY': 'Thursday',
+            'FRIDAY':   'Friday',
+            'SATURDAY': 'Saturday',
+        }[value]
     else:
         return 'N/A'
 

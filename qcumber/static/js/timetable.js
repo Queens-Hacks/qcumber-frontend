@@ -130,7 +130,7 @@
   // Load each of the sections stored in localStorage by making XHR requests
   // to the /timetable/section endpoint
   var sections = JSON.parse(localStorage.getItem('timetable-sections') || '[]');
-  forEach(sections, function(section) {
+  forEach(sections, function(sectionId) {
     unloaded++;
 
     var xhr = new XMLHttpRequest();
@@ -153,7 +153,7 @@
           }
 
           var section_data = {
-            section: section,
+            section: sectionId,
             type: data.type,
             room: aClass.location,
             code: data.subject + ' ' + data.course,
@@ -172,7 +172,7 @@
         renderAllSchedules();
     });
 
-    xhr.open('get', '/timetable/section/' + encodeURIComponent(section), true);
+    xhr.open('get', '/api/sections/' + sectionId, true);
     xhr.send();
   });
 

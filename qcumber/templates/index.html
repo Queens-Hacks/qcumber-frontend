@@ -33,23 +33,25 @@
 </div>
 
 <ul class="catalog-scan">
-  {% for letter in letters %}
-    <li><a href="#{{ letter.letter }}">{{letter.letter}}</a></li>
+  {% for letter in subject_groups.keys() %}
+    <li><a href="#{{ letter }}">{{letter}}</a></li>
   {% endfor %}
 </ul>
 
 <div class="catalog">
-  {% for letter in letters %}
-  <a class="top-link" href="#">back up</a>
-  <h3 class="letter"><a id="{{ letter.letter }}">{{ letter.letter | upper }}</a></h3>
+  {% for letter, subjects in subject_groups.items() %}
+    <a class="top-link" href="#">back up</a>
+    <h3 class="letter"><a id="{{ letter }}">{{ letter | upper }}</a></h3>
 
-  <ul>
-    {% for subject in letter.subjects %}
-    <li>
-      <a href="{{ url_for('subject_page', subject_id=subject.abbreviation) }}">{{subject.abbreviation}} - {{subject.title}}</a>
-    </li>
-    {% endfor %}
-  </ul>
+    <ul>
+      {% for subject in subjects %}
+        <li>
+          <a href="{{ url_for('subject_page', subject_abbr=subject.abbreviation) }}">
+            {{subject.abbreviation}} - {{subject.title}}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
   {% endfor %}
 </div>
 {% endblock %}
