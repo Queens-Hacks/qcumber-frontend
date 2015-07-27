@@ -1,4 +1,5 @@
 (function() {
+  var TIME_FMT = 'HH:mm:ss';
   var day_height = 60;
   var start_time = 7 * 60;
 
@@ -113,15 +114,15 @@
   var seasons = {};
   function getDays(season) {
     if (!seasons[season]) {
-      seasons[season] = [
-        [], // Sunday
-        [], // Monday
-        [], // Tuesday
-        [], // Wednesday
-        [], // Thursday
-        [], // Friday
-        []  // Saturday
-      ];
+      seasons[season] = {
+        SUNDAY: [],
+        MONDAY: [],
+        TUESDAY: [],
+        WEDNESDAY: [],
+        THURSDAY: [],
+        FRIDAY: [],
+        SATURDAY: [],
+      };
     }
 
     return seasons[season];
@@ -138,34 +139,27 @@
       unloaded--;
       var data = JSON.parse(this.responseText);
       forEach(data.classes, function(aClass) {
-        try {
-          // The Z is added to ensure that the browser parses the date signiture correctly
-          // The RFC states that Z ensures a UTC offset of 00:00, which means that we can
-          // use getUTCHours and getUTCMinutes and not have values offset from those appearing
-          // in the input string. This is good, because we don't actually care about timezones.
-          // SEE https://www.ietf.org/rfc/rfc3339.txt
-          var startTime = new Date(aClass.start_time + 'Z');
-          var endTime = new Date(aClass.end_time + 'Z');
+        var startTime = moment(aClass.start_time, TIME_FMT)
+        var endTime = moment(aClass.end_time, TIME_FMT)
 
-          if (isNaN(startTime.getUTCHours()) || isNaN(endTime.getUTCHours())) {
-            // skip this item, it's useless
-            return;
-          }
+        if (isNaN(startTime) || isNaN(endTime)) {
+          // skip this item, it's useless
+          return;
+        }
 
-          var section_data = {
-            section: sectionId,
-            type: data.type,
-            room: aClass.location,
-            code: data.subject + ' ' + data.course,
-            link: '/catalog/' + data.subject + '/' + data.course,
-            startHr: startTime.getUTCHours(),
-            startMin: startTime.getUTCMinutes(),
-            endHr: endTime.getUTCHours(),
-            endMin: endTime.getUTCMinutes()
-          };
+        var section_data = {
+          section: sectionId,
+          type: data.type,
+          room: aClass.location,
+          code: data.subject_abbrev + ' ' + data.course_num,
+          link: '/catalog/' + data.subject_abbrev + '/' + data.course_num,
+          startHr: startTime.hours(),
+          startMin: startTime.minutes(),
+          endHr: endTime.hours(),
+          endMin: endTime.minutes()
+        };
 
-          getDays(data.season + ' ' + data.year)[aClass.day_of_week].push(section_data);
-        } catch (e) { }
+        getDays(data.season + ' ' + data.year)[aClass.day_of_week].push(section_data);
       });
 
       if (unloaded <= 0)
@@ -278,7 +272,8 @@
 
       // Render the sections into each of the day columns
       for (var i = 0; i < day_sections.length; i++) {
-        renderSchedule(day_sections[i], days[i+1]);
+        var dow = moment().isoWeekday(i+1).format('dddd').toUpperCase();
+        renderSchedule(day_sections[i], days[dow]);
       }
     });
 

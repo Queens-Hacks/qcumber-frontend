@@ -175,8 +175,15 @@ def search_results_page():
 def api_section(section_id):
     try:
         section = db.dict_query("""
-            SELECT * FROM queens.sections
-            WHERE id = %s""", (section_id,))[0]
+            SELECT
+                s1.*,
+                c.number as course_num,
+                s2.abbreviation as subject_abbrev
+            FROM
+                queens.sections s1
+                    LEFT JOIN queens.courses c on (s1.course_id = c.id)
+                    LEFT JOIN queens.subjects s2 on (c.subject_id = s2.id)
+            WHERE s1.id = %s""", (section_id,))[0]
         section = db.section_get_classes(section)
         for cl in section['classes']:
             for k,val in cl.items():
