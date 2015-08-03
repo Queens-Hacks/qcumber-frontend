@@ -11,6 +11,11 @@ def nl2br(string):
     Convert newlines into <br> tags, and produce HTML.
     Also escapes all of the text passed in
     """
+    # some environments don't use unicode
+    try:
+        string = string.decode('utf8')
+    except:
+        pass
     return Markup('<br>'.join([escape(x) for x in string.split('\n')]))
 
 
