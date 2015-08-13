@@ -4,6 +4,8 @@ import datetime
 import re
 from collections import OrderedDict
 from flask import render_template, redirect, url_for, request, jsonify, abort
+import json
+import psycopg2
 
 # pylint: disable=W0611
 from qcumber import APP, util, filters, db
@@ -108,62 +110,87 @@ def subject_page(subject_abbr):
                         title='{abbreviation} - {title}'.format(**subject),
                         groups=grouped_courses)
 
-
-SUBJECT_RE = re.compile(r'^(?:SUBJECT: ?)?([A-Z]{2,4})$')
-COURSE_RE = re.compile(
-    r'^(?:(?:SUBJECT: ?([A-Z]{2,4}) NUMBER: ?([A-Z0-9]{2,4}))|(?:([A-Z]{2,4}) ?([A-Z0-9]{2,4})))$')
-
+SUBJECT_RE = re.compile(r'[A-Za-z]+')
+COURSE_RE = re.compile(r'[0-9]+[A-Za-z]*')
+SUPPORTED_SEARCH_KEYS = ['subject', 'course', 'units', 'seasons', 'career']
 @APP.route('/search')
 def search_results_page():
     """
     Search Results Page
     Displays a list of courses which match the search results
     """
-    query = request.args.get('q', '')
-    if query.strip() == '':
+    if sum(1 for _ in request.args.keys()) == 0:
         return redirect(url_for('index'))
 
-    # Check if there is a course/subject with the exact name
-    subject_match = SUBJECT_RE.match(query.upper())
-    course_match = COURSE_RE.match(query.upper())
-    if subject_match:
-        subject_abbr = subject_match.group(1)
-        try:
-            subject = db.subject_by_abbrev(subject_abbr)
-            return redirect(url_for('subject_page',
-                                    subject_abbr=subject_abbr))
-        except IndexError as e:
-            pass # The subject doesn't exist
-    elif course_match:
-        subject_abbr = course_match.group(1) or course_match.group(3)
-        course_id = course_match.group(2) or course_match.group(4)
-        try:
-            subject, course = db.course_by_abbrev(subject_abbr, course_num)
-            return redirect(url_for('course_page',
-                                    subject_abbr=subject_abbr,
-                                    course_id=course_id))
-        except IndexError as e:
-            pass # The course doesn't exist
+    # TODO log queries
+    query = {}
+    q_str = request.args.get('q', '')
+    advanced_search = False
+    if q_str != '':
+        # basic search is passed as a query string
+        if ':' not in q_str:
+            q_parts = q_str.split(' ')
+            for p in q_parts:
+                part = p.trim().upper()
+                subject_match = SUBJECT_RE.match(part)
+                course_match = COURSE_RE.match(part)
+                if subject_match:
+                    query['subject'] = part;
+                elif course_match:
+                    query['course'] = part;
+        else:
+            # support advanced query string to have key:value pairs separated by semicolons
+            advanced_search = True
+            try:
+                q = [[item.strip() for item in pair.split(':')] for pair in q_str.split(';')]
+                for pair in q:
+                    if pair[0] in SUPPORTED_SEARCH_KEYS:
+                        query[pair[0]] = pair[1] if ',' not in pair[1] else pair[1].split(',')
+            except IndexError as e:
+                return abort(404, 'That isn\'t a valid search query.')
+    else:
+        # also support key value passed in as query params
+        advanced_search = True
+        for k in SUPPORTED_SEARCH_KEYS:
+            val = request.args.get(k, '')
+            if val != '':
+                if ',' in val:
+                    query[k] = val.split(',')
+                else:
+                    query[k] = val
+        q_str = '; '.join([key + ': ' + val for key,val in query.items()])
 
-    # TODO a generic results page
-    """
-    Performs a Query String Query on the course doctype, and displays the results
-    With title, the results can be given a title. By default, only returns 100 results,
-    but all results can be forced using the force_all parameter
-    """
+    if len(query.keys()) == 0:
+        return abort(404, 'That isn\'t a valid search query.')
+
     try:
-        results = search.search_query(query, force_all)
-    except RequestError:
-        return render_template('error.html',
-                           query=query,
-                           error='Parse error while processing query: "{}"'.format(query))
+        # try for exact subject match, if not, we'll limit # of course results
+        if 'subject' in query and len(query.keys()) == 1:
+            try:
+                subject = db.subject_by_abbrev(query['subject'])
+                return redirect(url_for('subject_page',
+                                        subject_abbr=query['subject']))
+            except IndexError as e:
+                pass # The subject doesn't exist
 
-    groups = util.group_by_course_num(results)
+        # get courses matching, limit is 100
+        courses = db.search_courses(query)
+    except psycopg2.ProgrammingError as e:
+        return abort(404, 'That isn\'t a valid search query.')
 
+    # if only 1 match, jump to it
+    if len(courses) == 1:
+        return redirect(url_for('course_page',
+                                subject_abbr=courses[0]['subject_abbr'],
+                                course_num=courses[0]['number']))
+
+    groups = util.group_by_course_num(courses)
+
+    # TODO titles
     return render_template('search.html',
                            short_title=None,
                            title=None,
-                           query=query,
+                           query=q_str,
                            groups=groups)
 
 #################
