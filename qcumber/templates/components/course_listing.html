@@ -1,14 +1,16 @@
 <table class="course-listing">
   {% for course in courses %}
     <tr class="{% if course.seasons %}{% else %}unavaliable{% endif %}">
-      <td><a href="{{ url_for('subject_page', subject_id=course.subject) }}">{{ course.subject }}</a> {{ course.number }}</td>
+      <td><a href="{{ url_for('subject_page', subject_abbr=course.subject_abbr) }}">{{ course.subject_abbr }}</a> {{ course.number }}</td>
       <td>
-        <a href="{{ url_for('course_page', subject_id=course.subject, course_id=course.number) }}">
+        <a href="{{ url_for('course_page', subject_abbr=course.subject_abbr, course_num=course.number) }}">
           {{ course.title }}
 
-          {% for season in course.seasons %}
-          <span class="season-tag season-{{ season }}">{{ season }}</span>
-          {% endfor %}
+          {% if course.seasons %}
+            {% for season in course.seasons %}
+            <span class="season-tag season-{{ season }}">{{ season }}</span>
+            {% endfor %}
+          {% endif %}
         </a>
       </td>
       <td>{{ course.units }} units</td>

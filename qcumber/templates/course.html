@@ -1,6 +1,6 @@
 {% extends "tmpl.html" %}
 
-{% block title %}{{ course.subject }} {{ course.number }} - Qcumber{% endblock %}
+{% block title %}{{ subject.abbreviation }} {{ course.number }} - Qcumber{% endblock %}
 
 {% block contents %}
 <!-- COURSE GRADING CAREER UNITS -->
@@ -8,7 +8,7 @@
 
 <!-- COURSE NAME -->
 <h2 class="course-name">
-  <a href="{{ url_for('subject_page', subject_id=course.subject) }}">{{ course.subject }}</a> {{ course.number }}
+  <a href="{{ url_for('subject_page', subject_abbr=subject.abbreviation) }}">{{ subject.abbreviation }}</a> {{ course.number }}
   <small>{{ course.title }}</small>
 </h2>
 
@@ -18,7 +18,7 @@
 
 <!-- REQUIREMENTS -->
 <h4>Enrollment Requirements</h4>
-<p>{{ course.enrollment_requirement | default('No enrollment requirements listed on SOLUS', True) | nl2br }}</p>
+<p>{{ course.enrollment_req | default('No enrollment requirements listed on SOLUS', True) | nl2br }}</p>
 
 <!-- TEXTBOOKS -->
 {% if textbooks %}
@@ -37,10 +37,10 @@
     </tr>
     {% for textbook in textbooks %}
     <tr>
-      <td><a href="{{ textbook.listing_url }}">{{ textbook.title }}</a></td>
-      <td>{{ textbook.authors }}</td>
+      <td><a href="{{ textbook.url }}">{{ textbook.title }}</a></td>
+      <td>{{ ', '.join(textbook.authors) }}</td>
       <td>{% if textbook.required %}Yes{% else %}No{% endif %}</td>
-      <td>{{ textbook.new_price }}</td>
+      <td>{{ textbook.price }}</td>
     </tr>
     {% endfor %}
   </table>
@@ -60,7 +60,7 @@
   </h4>
   <ul id="{{ term | slugify }}" class="section-list">
     {% for section in sections %}
-    <li class="section" data-id="{{ section._id }}">
+    <li class="section" data-id="{{ section.id }}">
       <header>{{ section.type | fancy_section_type }} <small>({{ section.class_num }})</small></header>
       <table>
         {% for class in section.classes %}
@@ -73,11 +73,13 @@
 
           <td class="instructors">
             <ul>
-            {% for instructor in class.instructors %}
-              <li>{{ instructor }}</li>
+            {% if class.instructors %}
+              {% for instructor in class.instructors %}
+                <li>{{ instructor }}</li>
+              {% endfor %}
             {% else %}
               <li>TBA</li>
-            {% endfor %}
+            {% endif %}
             </ul>
           </td>
 
