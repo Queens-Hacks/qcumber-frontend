@@ -109,7 +109,6 @@
     });
   }
 
-  var unloaded = 0;
   var seasons = {};
   function getDays(season) {
     if (!seasons[season]) {
@@ -130,13 +129,12 @@
   // Load each of the sections stored in localStorage by making XHR requests
   // to the /timetable/section endpoint
   var sections = JSON.parse(localStorage.getItem('timetable-sections') || '[]');
-  forEach(sections, function(section) {
-    unloaded++;
+  var promises = map(sections, function(section) {
+    var pr = fetch('/timetable/section/' + encodeURIComponent(section));
 
-    var xhr = new XMLHttpRequest();
-    xhr.addEventListener('load', function() {
-      unloaded--;
-      var data = JSON.parse(this.responseText);
+    return pr.then(function (response) {
+      return response.json();
+    }).then(function (data) {
       forEach(data.classes, function(aClass) {
         try {
           // The Z is added to ensure that the browser parses the date signiture correctly
@@ -144,11 +142,12 @@
           // use getUTCHours and getUTCMinutes and not have values offset from those appearing
           // in the input string. This is good, because we don't actually care about timezones.
           // SEE https://www.ietf.org/rfc/rfc3339.txt
-          var startTime = new Date(aClass.start_time + 'Z');
-          var endTime = new Date(aClass.end_time + 'Z');
+          var startTime = new Date('1970-01-01T' + aClass.start_time + 'Z');
+          var endTime = new Date('1970-01-01T' + aClass.end_time + 'Z');
 
           if (isNaN(startTime.getUTCHours()) || isNaN(endTime.getUTCHours())) {
             // skip this item, it's useless
+            console.error("Bad Time!: ");
             return;
           }
 
@@ -168,12 +167,18 @@
         } catch (e) { }
       });
 
-      if (unloaded <= 0)
-        renderAllSchedules();
+      return Promise.resolve();
+    }, function(err) {
+      console.error("ERROR: ", err);
+      return Promise.resolve();
     });
+  });
 
-    xhr.open('get', '/timetable/section/' + encodeURIComponent(section), true);
-    xhr.send();
+  Promise.all(promises).then(function() {
+    if (Object.keys(seasons).length == 0) {
+      return;
+    }
+    renderAllSchedules();
   });
 
   function createSeason(season) {
